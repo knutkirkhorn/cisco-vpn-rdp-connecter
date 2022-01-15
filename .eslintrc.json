@@ -1,0 +1,28 @@
+{
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "airbnb-base"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": ["error", 4, {"SwitchCase": 1}],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "linebreak-style": "off",
+        "arrow-parens": ["error", "as-needed"],
+        "object-curly-spacing": ["error", "never"],
+        "comma-dangle": ["error", "never"],
+        "import/extensions": ["error", "always"],
+        "no-console": "off",
+        "max-len": "off",
+        "no-plusplus": "off"
+    }
+}
