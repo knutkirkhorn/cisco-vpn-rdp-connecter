@@ -16,8 +16,20 @@ const vpn = ciscoVpn({
 });
 
 (async () => {
-    await vpn.connect();
-    console.log('Connected to VPN!');
+    try {
+        await vpn.connect();
+        console.log('Connected to VPN!');
+    } catch (error) {
+        const trimmedErrorMessage = error.message.replaceAll('VPN>', '').trim();
+        const vpnCliConnectedMessage = `>> notice: Connected to ${config.vpnServer}.`;
+        const isVpnAlreadyConnected = trimmedErrorMessage.endsWith(vpnCliConnectedMessage);
+
+        if (isVpnAlreadyConnected) {
+            console.log('Already connected to VPN!');
+        } else {
+            throw new Error(error);
+        }
+    }
 
     // Open RDP connection
     exec(`mstsc.exe /v:${config.rdpServer}`, (error, stdout, stderr) => {
