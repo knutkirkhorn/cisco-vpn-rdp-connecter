@@ -22,7 +22,8 @@ const vpn = ciscoVpn({
     } catch (error) {
         const trimmedErrorMessage = error.message.replaceAll('VPN>', '').trim();
         const vpnCliConnectedMessage = `>> notice: Connected to ${config.vpnServer}.`;
-        const isVpnAlreadyConnected = trimmedErrorMessage.endsWith(vpnCliConnectedMessage);
+        const isVpnConnectedRegex = /(.*)>> error: Connect not available. Another AnyConnect application is running(\r)+\nor this functionality was not requested by this application./gi;
+        const isVpnAlreadyConnected = trimmedErrorMessage.endsWith(vpnCliConnectedMessage) || trimmedErrorMessage.match(isVpnConnectedRegex);
 
         if (isVpnAlreadyConnected) {
             console.log('Already connected to VPN!');
