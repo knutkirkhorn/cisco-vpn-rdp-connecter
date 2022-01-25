@@ -7,7 +7,7 @@ if (!config.vpnServer || !config.vpnUsername || !config.vpnPassword || !config.r
 }
 
 // TODO: Remove when this fixed in the package (https://github.com/MarkTiedemann/cisco-vpn/issues/6)
-const combinedVpnGroupAndUsername = `${config.vpnTunnelType}\n${config.vpnUsername}`;
+const combinedVpnGroupAndUsername = `${config.vpnGroup}\n${config.vpnUsername}`;
 
 const vpn = ciscoVpn({
     server: config.vpnServer,
