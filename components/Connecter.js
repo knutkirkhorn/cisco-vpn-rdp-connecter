@@ -2,7 +2,7 @@ const React = require('react');
 const {useState, useEffect} = require('react');
 const Conf = require('conf');
 const importJsx = require('import-jsx');
-const {connectToVpn, openRdpWindow} = require('../index.js');
+const {connectToVpn, openRdpWindow, isCiscoVpnConnected} = require('../index.js');
 
 const LoadingMessage = importJsx('./LoadingMessage.js');
 const SetupCredentials = importJsx('./SetupCredentials.js');
@@ -81,6 +81,13 @@ const Connecter = ({requestedSetup}) => {
                 username,
                 password
             } = credentials.vpn;
+
+            const isVpnAlreadyConnected = await isCiscoVpnConnected();
+
+            if (isVpnAlreadyConnected) {
+                setIsConnectedToVpn(true);
+                return;
+            }
 
             try {
                 await connectToVpn(server, group, username, password);

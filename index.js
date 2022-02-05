@@ -1,6 +1,6 @@
 const ciscoVpn = require('cisco-vpn');
 // eslint-disable-next-line import/no-unresolved
-const {spawn} = require('node:child_process');
+const {spawn, exec} = require('node:child_process');
 
 async function connectToVpn(server, group, username, password) {
     // Require that all credentials are set
@@ -52,6 +52,24 @@ async function connectToVpnAndOpenRdp(vpnCredentials, rdpServer) {
     await openRdpWindow(rdpServer);
 }
 
+async function isCiscoVpnConnected() {
+    return new Promise((resolve, reject) => {
+        exec('"C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe" stats', (error, stdout) => {
+            if (error) {
+                return reject(error);
+            }
+
+            const returnMessage = stdout.toString();
+            const vpnState = returnMessage.trim()
+                .match(/(.*)Connection State:(.*)/gi)
+                .find(match => !match.includes('management')).trim()
+                .split(':')[1].trim();
+
+            return resolve(vpnState === 'Connected');
+        });
+    });
+}
+
 async function disconnectFromVpn() {
     try {
         // TODO: passing redundant values because it requires input. Remove this when/if fixed.
@@ -77,5 +95,6 @@ async function closeRdpWindow() {
 module.exports.connectToVpn = connectToVpn;
 module.exports.openRdpWindow = openRdpWindow;
 module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
+module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
 module.exports.disconnectFromVpn = disconnectFromVpn;
 module.exports.closeRdpWindow = closeRdpWindow;
