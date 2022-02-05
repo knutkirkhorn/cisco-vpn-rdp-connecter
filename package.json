@@ -1,15 +1,13 @@
 {
   "name": "cisco-vpn-rdp-connecter",
   "version": "1.0.0",
-  "description": "Simple script for connecting to Cisco AnyConnect VPN and opening a Microsoft Remote Desktop (RDP) window",
+  "description": "Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop (RDP) window",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ."
   },
   "repository": {
-    "start": "node index.js",
     "type": "git",
     "url": "git+https://github.com/knutkirkhorn/cisco-vpn-rdp-connecter.git"
   },
@@ -17,13 +15,11 @@
     "cisco",
     "anyconnect",
     "vpn",
-    "rdp"
+    "rdp",
+    "cli",
+    "cli-app"
   ],
   "author": "Knut Kirkhorn",
-  "type": "module",
-  "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
-  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/knutkirkhorn/cisco-vpn-rdp-connecter/issues"
@@ -31,11 +27,22 @@
   "homepage": "https://github.com/knutkirkhorn/cisco-vpn-rdp-connecter#readme",
   "dependencies": {
     "cisco-vpn": "^1.0.2",
-    "dotenv": "^12.0.3"
+    "conf": "^10.1.1",
+    "import-jsx": "^4.0.1",
+    "ink": "^3.2.0",
+    "ink-spinner": "^4.0.3",
+    "ink-text-input": "^4.0.2",
+    "is-unicode-supported": "^0.1.0",
+    "log-symbols": "^4.1.0",
+    "meow": "^9.0.0",
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "eslint": "^8.6.0",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.4"
+    "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-react": "^7.28.0"
   }
 }
