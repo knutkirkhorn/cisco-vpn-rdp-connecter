@@ -21,8 +21,8 @@ const TextAndInputBox = ({
             return;
         }
 
-        let visualInput = inputText !== '' ? inputText : defaultText;
-        const unmaskedInput = visualInput;
+        const unmaskedInput = inputText !== '' ? inputText : defaultText;
+        let visualInput = unmaskedInput;
 
         // If the input uses a mask replace the text with mask in UI
         if (mask) {
