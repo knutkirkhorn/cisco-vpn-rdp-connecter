@@ -46,8 +46,8 @@ async function openRdpWindow(server) {
     // Open RDP window
     return new Promise(resolve => {
         // Needs to promisify `spawn` because `spawnSync` does not return after starting `mstsc`
-        const process = spawn('cmd.exe', ['/c', 'start', 'mstsc.exe', `/v:${server}`]);
-        process.on('exit', () => resolve());
+        const rdpProcess = spawn('cmd.exe', ['/c', 'start', 'mstsc.exe', `/v:${server}`]);
+        rdpProcess.on('exit', () => resolve());
     });
 }
 
@@ -128,8 +128,8 @@ async function disconnectFromVpn() {
 
 async function closeRdpWindow() {
     return new Promise(resolve => {
-        const process = spawn('taskkill', ['/im', 'mstsc.exe']);
-        process.on('exit', () => resolve());
+        const rdpProcess = spawn('taskkill', ['/im', 'mstsc.exe']);
+        rdpProcess.on('exit', () => resolve());
     });
 }
 
