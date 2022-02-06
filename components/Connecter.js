@@ -2,7 +2,12 @@ const React = require('react');
 const {useState, useEffect} = require('react');
 const Conf = require('conf');
 const importJsx = require('import-jsx');
-const {connectToVpn, openRdpWindow, isCiscoVpnConnected} = require('../index.js');
+const {
+    connectToVpn,
+    openRdpWindow,
+    isCiscoVpnConnected,
+    getCiscoVpnDefaults
+} = require('../index.js');
 
 const LoadingMessage = importJsx('./LoadingMessage.js');
 const SetupCredentials = importJsx('./SetupCredentials.js');
@@ -41,8 +46,13 @@ const Connecter = ({requestedSetup}) => {
             const {vpn: vpnCredentials} = savedCredentials;
             const {rdp: rdpCredentials} = savedCredentials;
 
+            const ciscoVpnDefaults = await getCiscoVpnDefaults();
+
             setCredentials({
                 vpn: {
+                    server: ciscoVpnDefaults.server,
+                    group: ciscoVpnDefaults.group,
+                    username: ciscoVpnDefaults.username,
                     ...vpnCredentials
                 },
                 rdp: {

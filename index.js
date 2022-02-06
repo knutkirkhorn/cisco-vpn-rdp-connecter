@@ -1,6 +1,10 @@
 const ciscoVpn = require('cisco-vpn');
 // eslint-disable-next-line import/no-unresolved
 const {spawn, exec} = require('node:child_process');
+// eslint-disable-next-line import/no-unresolved
+const path = require('node:path');
+const {xml2js} = require('xml-js');
+const {readFile} = require('fs/promises');
 
 async function connectToVpn(server, group, username, password) {
     // Require that all credentials are set
@@ -70,6 +74,43 @@ async function isCiscoVpnConnected() {
     });
 }
 
+async function convertGroupToGroupNumber(server, group) {
+    // If it's already a number, just return it
+    if (typeof group === 'number') {
+        return group;
+    }
+
+    return new Promise((resolve, reject) => {
+        const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
+
+        // eslint-disable-next-line consistent-return
+        vpnProcess.stdout.on('data', data => {
+            if (data.includes('Group: ')) {
+                vpnProcess.kill();
+                const groupLines = data.toString().trim()
+                    .split('>> Please enter your username and password.')[1].trim().split('\n');
+                const selectedGroupLine = groupLines.find(groupLine => groupLine.trim().endsWith(group)).trim();
+                const groupNumber = selectedGroupLine.split(')')[0];
+                return resolve(groupNumber);
+            }
+        });
+    });
+}
+
+async function getCiscoVpnDefaults() {
+    const filePath = path.join(process.env.APPDATA, '..\\Local\\Cisco\\Cisco AnyConnect Secure Mobility Client\\preferences.xml');
+    const xmlFile = await readFile(filePath, 'utf-8');
+    const anyConnectXmlElement = xml2js(xmlFile).elements[0];
+    const anyConnectElements = anyConnectXmlElement.elements;
+
+    const server = anyConnectElements.find(element => element.name === 'DefaultHostName').elements[0].text;
+    const groupText = anyConnectElements.find(element => element.name === 'DefaultGroup').elements[0].text;
+    const group = await convertGroupToGroupNumber(server, groupText);
+    const username = anyConnectElements.find(element => element.name === 'DefaultUser').elements[0].text;
+
+    return {server, group, username};
+}
+
 async function disconnectFromVpn() {
     try {
         // TODO: passing redundant values because it requires input. Remove this when/if fixed.
@@ -96,5 +137,6 @@ module.exports.connectToVpn = connectToVpn;
 module.exports.openRdpWindow = openRdpWindow;
 module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
 module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
+module.exports.getCiscoVpnDefaults = getCiscoVpnDefaults;
 module.exports.disconnectFromVpn = disconnectFromVpn;
 module.exports.closeRdpWindow = closeRdpWindow;
