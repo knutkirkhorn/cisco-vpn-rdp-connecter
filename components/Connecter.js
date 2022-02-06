@@ -6,7 +6,8 @@ const {
     connectToVpn,
     openRdpWindow,
     isCiscoVpnConnected,
-    getCiscoVpnDefaults
+    getCiscoVpnDefaults,
+    getRdpDefaults
 } = require('../index.js');
 
 const LoadingMessage = importJsx('./LoadingMessage.js');
@@ -47,6 +48,7 @@ const Connecter = ({requestedSetup}) => {
             const {rdp: rdpCredentials} = savedCredentials;
 
             const ciscoVpnDefaults = await getCiscoVpnDefaults();
+            const rdpDefaults = await getRdpDefaults();
 
             setCredentials({
                 vpn: {
@@ -56,6 +58,7 @@ const Connecter = ({requestedSetup}) => {
                     ...vpnCredentials
                 },
                 rdp: {
+                    server: rdpDefaults.server,
                     ...rdpCredentials
                 }
             });

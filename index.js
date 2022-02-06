@@ -5,6 +5,7 @@ const {spawn, exec} = require('node:child_process');
 const path = require('node:path');
 const {xml2js} = require('xml-js');
 const {readFile} = require('fs/promises');
+const regedit = require('regedit');
 
 async function connectToVpn(server, group, username, password) {
     // Require that all credentials are set
@@ -111,6 +112,15 @@ async function getCiscoVpnDefaults() {
     return {server, group, username};
 }
 
+async function getRdpDefaults() {
+    // Read more here https://docs.microsoft.com/en-us/troubleshoot/windows-server/remote/remove-entries-from-remote-desktop-connection-computer#remove-entries-in-the-mac-remote-desktop-connection-client
+    const recentServerRegistryKey = 'HKCU\\Software\\Microsoft\\Terminal Server Client\\Default';
+    const registryResult = await regedit.promisified.list([recentServerRegistryKey]);
+    const server = registryResult[recentServerRegistryKey].values.MRU0.value;
+
+    return {server};
+}
+
 async function disconnectFromVpn() {
     try {
         // TODO: passing redundant values because it requires input. Remove this when/if fixed.
@@ -138,5 +148,6 @@ module.exports.openRdpWindow = openRdpWindow;
 module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
 module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
 module.exports.getCiscoVpnDefaults = getCiscoVpnDefaults;
+module.exports.getRdpDefaults = getRdpDefaults;
 module.exports.disconnectFromVpn = disconnectFromVpn;
 module.exports.closeRdpWindow = closeRdpWindow;
