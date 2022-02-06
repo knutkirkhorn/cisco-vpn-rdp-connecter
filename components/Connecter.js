@@ -38,6 +38,7 @@ const Connecter = ({requestedSetup}) => {
         vpn: {},
         rdp: {}
     });
+    const [isCheckingSavedCredentials, setIsCheckingSavedCredentials] = useState(true);
     const [isSettingUpCredentials, setIsSettingUpCredentials] = useState(true);
     const [loadedPreviouslyUsedCredentials, setLoadedPreviouslyUsedCredentials] = useState(false);
 
@@ -62,6 +63,8 @@ const Connecter = ({requestedSetup}) => {
                     ...rdpCredentials
                 }
             });
+
+            setIsCheckingSavedCredentials(false);
 
             // Return early if requested a new credential setup
             if (requestedSetup) {
@@ -142,6 +145,10 @@ const Connecter = ({requestedSetup}) => {
         setCredentials(inputCredentials);
         setIsSettingUpCredentials(false);
     };
+
+    if (isCheckingSavedCredentials) {
+        return <LoadingMessage loadingMessage="Loading configs" />;
+    }
 
     if (isSettingUpCredentials) {
         return (
