@@ -48,7 +48,8 @@ const Connecter = ({requestedSetup}) => {
             const {vpn: vpnCredentials} = savedCredentials;
             const {rdp: rdpCredentials} = savedCredentials;
 
-            const ciscoVpnDefaults = await getCiscoVpnDefaults();
+            const isVpnConnected = await isCiscoVpnConnected();
+            const ciscoVpnDefaults = isVpnConnected ? {} : await getCiscoVpnDefaults();
             const rdpDefaults = await getRdpDefaults();
 
             setCredentials({
@@ -72,11 +73,12 @@ const Connecter = ({requestedSetup}) => {
             }
 
             // If all credentials are previously saved, skip the credential setup
-            if (!!vpnCredentials.server
+            if ((!!vpnCredentials.server
                 && !!vpnCredentials.group
                 && !!vpnCredentials.username
                 && !!vpnCredentials.password
-                && !!rdpCredentials.server
+                && !!rdpCredentials.server)
+                || isVpnConnected
             ) {
                 setIsSettingUpCredentials(false);
                 setLoadedPreviouslyUsedCredentials(true);
