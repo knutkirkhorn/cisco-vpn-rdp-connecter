@@ -84,6 +84,9 @@ async function convertGroupToGroupNumber(server, group) {
     return new Promise((resolve, reject) => {
         const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
 
+        // Default to `0` if it fails to start `connect` (already connected to VPN)
+        vpnProcess.on('close', () => resolve(0));
+
         // eslint-disable-next-line consistent-return
         vpnProcess.stdout.on('data', data => {
             if (data.includes('Group: ')) {
