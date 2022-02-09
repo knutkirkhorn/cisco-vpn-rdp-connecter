@@ -6,12 +6,20 @@
     },
     "extends": [
         "eslint:recommended",
-        "airbnb-base"
+        "plugin:react/recommended",
+        "airbnb-base",
+        "airbnb",
+        "react-app"
     ],
     "parserOptions": {
-        "ecmaVersion": 2021,
-        "sourceType": "module"
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 2021
     },
+    "plugins": [
+        "react"
+    ],
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],
         "quotes": ["error", "single"],
@@ -21,8 +29,13 @@
         "object-curly-spacing": ["error", "never"],
         "comma-dangle": ["error", "never"],
         "import/extensions": ["error", "always"],
-        "no-console": "off",
         "max-len": "off",
-        "no-plusplus": "off"
+        "no-plusplus": "off",
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
+        "react/jsx-filename-extension": ["error", {"extensions": [".js"]}],
+        "react/function-component-definition": "off",
+        "react/prop-types": "off",
+        "strict": "off" // TODO: turn on this rule again when moving to ESM
     }
 }

@@ -1,41 +1,156 @@
-import ciscoVpn from 'cisco-vpn';
-import {exec} from 'node:child_process';
-import config from './config.js';
+const ciscoVpn = require('cisco-vpn');
+// eslint-disable-next-line import/no-unresolved
+const {spawn, exec} = require('node:child_process');
+// eslint-disable-next-line import/no-unresolved
+const path = require('node:path');
+const {xml2js} = require('xml-js');
+const {readFile} = require('fs/promises');
+const regedit = require('regedit');
 
-if (!config.vpnServer || !config.vpnUsername || !config.vpnPassword || !config.rdpServer) {
-    throw new Error('Need to set all required configuration for connecting to Cisco VPN and opening Microsoft RDP!');
-}
+async function connectToVpn(server, group, username, password) {
+    // Require that all credentials are set
+    if (server === undefined || group === undefined || username === undefined || password === undefined) {
+        throw new Error('Need to set all credentials for connecting to Cisco VPN!');
+    }
 
-// TODO: Remove when this fixed in the package (https://github.com/MarkTiedemann/cisco-vpn/issues/6)
-const combinedVpnGroupAndUsername = `${config.vpnGroup}\n${config.vpnUsername}`;
+    // TODO: Remove when this fixed in the package (https://github.com/MarkTiedemann/cisco-vpn/issues/6)
+    const combinedVpnGroupAndUsername = `${group}\n${username}`;
 
-const vpn = ciscoVpn({
-    server: config.vpnServer,
-    username: combinedVpnGroupAndUsername,
-    password: config.vpnPassword
-});
+    const vpn = ciscoVpn({
+        server,
+        username: combinedVpnGroupAndUsername,
+        password
+    });
 
-(async () => {
     try {
         await vpn.connect();
-        console.log('Connected to VPN!');
     } catch (error) {
         const trimmedErrorMessage = error.message.replaceAll('VPN>', '').trim();
-        const vpnCliConnectedMessage = `>> notice: Connected to ${config.vpnServer}.`;
+        const vpnCliConnectedMessage = `>> notice: Connected to ${server}.`;
         const isVpnConnectedRegex = /(.*)>> error: Connect not available. Another AnyConnect application is running(\r)+\nor this functionality was not requested by this application./gi;
         const isVpnAlreadyConnected = trimmedErrorMessage.endsWith(vpnCliConnectedMessage) || trimmedErrorMessage.match(isVpnConnectedRegex);
 
         if (isVpnAlreadyConnected) {
-            console.log('Already connected to VPN!');
+            throw new Error('Already connected to VPN!');
         } else {
             throw new Error(error);
         }
     }
+}
 
-    // Open RDP connection
-    exec(`mstsc.exe /v:${config.rdpServer}`, (error, stdout, stderr) => {
-        console.log(error);
-        console.log(stdout);
-        console.log(stderr);
+async function openRdpWindow(server) {
+    // Require that all credentials are set
+    if (server === undefined) {
+        throw new Error('Need to set all credentials for opening Microsoft RDP!');
+    }
+
+    // Open RDP window
+    return new Promise(resolve => {
+        // Needs to promisify `spawn` because `spawnSync` does not return after starting `mstsc`
+        const rdpProcess = spawn('cmd.exe', ['/c', 'start', 'mstsc.exe', `/v:${server}`]);
+        rdpProcess.on('exit', () => resolve());
     });
-})();
+}
+
+async function connectToVpnAndOpenRdp(vpnCredentials, rdpServer) {
+    await connectToVpn(...vpnCredentials);
+    await openRdpWindow(rdpServer);
+}
+
+async function isCiscoVpnConnected() {
+    return new Promise((resolve, reject) => {
+        exec('"C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe" stats', (error, stdout) => {
+            if (error) {
+                return reject(error);
+            }
+
+            const returnMessage = stdout.toString();
+            const vpnState = returnMessage.trim()
+                .match(/(.*)Connection State:(.*)/gi)
+                .find(match => !match.includes('management')).trim()
+                .split(':')[1].trim();
+
+            return resolve(vpnState === 'Connected');
+        });
+    });
+}
+
+async function convertGroupToGroupNumber(server, group) {
+    // If it's already a number, just return it
+    if (typeof group === 'number') {
+        return group;
+    }
+
+    return new Promise((resolve, reject) => {
+        const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
+
+        // Default to `0` if it fails to start `connect` (already connected to VPN)
+        vpnProcess.on('close', () => resolve(0));
+
+        // eslint-disable-next-line consistent-return
+        vpnProcess.stdout.on('data', data => {
+            if (data.includes('Group: ')) {
+                vpnProcess.kill();
+                const groupLines = data.toString().trim()
+                    .split('>> Please enter your username and password.')[1].trim().split('\n');
+                const selectedGroupLine = groupLines.find(groupLine => groupLine.trim().endsWith(group)).trim();
+                const groupNumber = selectedGroupLine.split(')')[0];
+                return resolve(groupNumber);
+            }
+        });
+    });
+}
+
+async function getCiscoVpnDefaults() {
+    const filePath = path.join(process.env.APPDATA, '..\\Local\\Cisco\\Cisco AnyConnect Secure Mobility Client\\preferences.xml');
+    const xmlFile = await readFile(filePath, 'utf-8');
+    const anyConnectXmlElement = xml2js(xmlFile).elements[0];
+    const anyConnectElements = anyConnectXmlElement.elements;
+
+    const server = anyConnectElements.find(element => element.name === 'DefaultHostName').elements[0].text;
+    const groupText = anyConnectElements.find(element => element.name === 'DefaultGroup').elements[0].text;
+    const group = await convertGroupToGroupNumber(server, groupText);
+    const username = anyConnectElements.find(element => element.name === 'DefaultUser').elements[0].text;
+
+    return {server, group, username};
+}
+
+async function getRdpDefaults() {
+    // Read more here https://docs.microsoft.com/en-us/troubleshoot/windows-server/remote/remove-entries-from-remote-desktop-connection-computer#remove-entries-in-the-mac-remote-desktop-connection-client
+    const recentServerRegistryKey = 'HKCU\\Software\\Microsoft\\Terminal Server Client\\Default';
+    const registryResult = await regedit.promisified.list([recentServerRegistryKey]);
+    const server = registryResult[recentServerRegistryKey].values.MRU0.value;
+
+    return {server};
+}
+
+async function disconnectFromVpn() {
+    try {
+        // TODO: passing redundant values because it requires input. Remove this when/if fixed.
+        await ciscoVpn({server: 'noop', username: 'noop', password: 'noop'}).disconnect();
+    } catch (error) {
+        // Check if the VPN client is not connected
+        const trimmedErrorMessage = error.message.replaceAll('VPN>', '').trim();
+        const isVpnAlreadyDisconnected = trimmedErrorMessage.endsWith('The VPN client is not connected.');
+
+        if (!isVpnAlreadyDisconnected) {
+            throw new Error(error);
+        }
+    }
+}
+
+async function closeRdpWindow() {
+    return new Promise(resolve => {
+        const rdpProcess = spawn('taskkill', ['/im', 'mstsc.exe']);
+        rdpProcess.on('exit', () => resolve());
+    });
+}
+
+module.exports.connectToVpn = connectToVpn;
+module.exports.openRdpWindow = openRdpWindow;
+module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
+module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
+module.exports.getCiscoVpnDefaults = getCiscoVpnDefaults;
+module.exports.getRdpDefaults = getRdpDefaults;
+module.exports.disconnectFromVpn = disconnectFromVpn;
+module.exports.closeRdpWindow = closeRdpWindow;
