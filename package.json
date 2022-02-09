@@ -9,11 +9,12 @@
   "files": [
     "cli.js",
     "index.js",
+    "index.d.ts",
     "ui.js",
     "components"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsd",
     "lint": "eslint ."
   },
   "repository": {
@@ -54,6 +55,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-react-app": "^7.0.0",
     "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-react": "^7.28.0"
+    "eslint-plugin-react": "^7.28.0",
+    "tsd": "^0.19.1"
   }
 }
