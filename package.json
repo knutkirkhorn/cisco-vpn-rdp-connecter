@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "description": "Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop (RDP) window",
   "main": "index.js",
+  "bin": {
+    "cisco-vpn-rdp-connecter": "cli.js"
+  },
+  "files": [
+    "cli.js",
+    "index.js",
+    "ui.js",
+    "components"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ."
