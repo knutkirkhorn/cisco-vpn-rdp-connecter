@@ -81,7 +81,7 @@ async function convertGroupToGroupNumber(server, group) {
         return group;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
 
         // Default to `0` if it fails to start `connect` (already connected to VPN)
