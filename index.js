@@ -4,6 +4,7 @@ const {spawn, exec} = require('node:child_process');
 // eslint-disable-next-line import/no-unresolved
 const path = require('node:path');
 const {xml2js} = require('xml-js');
+// eslint-disable-next-line import/no-unresolved
 const {readFile} = require('fs/promises');
 const regedit = require('regedit');
 
