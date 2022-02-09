@@ -2,6 +2,8 @@ const React = require('react');
 const {useState, useEffect} = require('react');
 const Conf = require('conf');
 const importJsx = require('import-jsx');
+const {Text, Box} = require('ink');
+const logSymbols = require('log-symbols');
 const {
     connectToVpn,
     openRdpWindow,
@@ -41,6 +43,7 @@ const Connecter = ({requestedSetup}) => {
     const [isCheckingSavedCredentials, setIsCheckingSavedCredentials] = useState(true);
     const [isSettingUpCredentials, setIsSettingUpCredentials] = useState(true);
     const [loadedPreviouslyUsedCredentials, setLoadedPreviouslyUsedCredentials] = useState(false);
+    const [isIncorrectLoginDetails, setIsIncorrectLoginDetails] = useState(false);
 
     useEffect(() => {
         const checkSavedCredentials = async () => {
@@ -111,8 +114,11 @@ const Connecter = ({requestedSetup}) => {
                 await connectToVpn(server, group, username, password);
                 setIsConnectedToVpn(true);
             } catch (error) {
-                console.log(error);
-                // TODO: fix this after improving the VPN state checker
+                if (error.message === 'Incorrect login details') {
+                    setIsIncorrectLoginDetails(true);
+                    return;
+                }
+
                 if (error.message !== 'Already connected to VPN!') {
                     throw error;
                 }
@@ -158,6 +164,25 @@ const Connecter = ({requestedSetup}) => {
                 onComplete={onCredentialsSet}
                 defaultCredentials={credentials}
             />
+        );
+    }
+
+    if (isIncorrectLoginDetails) {
+        return (
+            <Box flexDirection="column">
+                <Text color="redBright" bold>
+                    {logSymbols.error}
+                    {' '}
+                    Incorrect VPN login details
+                </Text>
+                <Text>
+                    Use
+                    {' '}
+                    <Text dimColor>`cisco-vpn-rdp-connecter --setup`</Text>
+                    {' '}
+                    to set login details.
+                </Text>
+            </Box>
         );
     }
 

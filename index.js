@@ -27,6 +27,12 @@ async function connectToVpn(server, group, username, password) {
         await vpn.connect();
     } catch (error) {
         const trimmedErrorMessage = error.message.replaceAll('VPN>', '').trim();
+
+        const isIncorrectLoginDetails = trimmedErrorMessage.endsWith('Login failed.');
+        if (isIncorrectLoginDetails) {
+            throw new Error('Incorrect login details');
+        }
+
         const vpnCliConnectedMessage = `>> notice: Connected to ${server}.`;
         const isVpnConnectedRegex = /(.*)>> error: Connect not available. Another AnyConnect application is running(\r)+\nor this functionality was not requested by this application./gi;
         const isVpnAlreadyConnected = trimmedErrorMessage.endsWith(vpnCliConnectedMessage) || trimmedErrorMessage.match(isVpnConnectedRegex);
