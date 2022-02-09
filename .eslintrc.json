@@ -20,6 +20,8 @@
     "plugins": [
         "react"
     ],
+    // TODO: remove when this is fixed: https://github.com/facebook/create-react-app/issues/8936#issuecomment-674060591
+    "ignorePatterns": "node_modules/",
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],
         "quotes": ["error", "single"],
