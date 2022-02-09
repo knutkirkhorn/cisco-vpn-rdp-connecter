@@ -4,6 +4,7 @@ const {spawn, exec} = require('node:child_process');
 // eslint-disable-next-line import/no-unresolved
 const path = require('node:path');
 const {xml2js} = require('xml-js');
+// eslint-disable-next-line import/no-unresolved
 const {readFile} = require('fs/promises');
 const regedit = require('regedit');
 
@@ -81,7 +82,7 @@ async function convertGroupToGroupNumber(server, group) {
         return group;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
 
         // Default to `0` if it fails to start `connect` (already connected to VPN)
