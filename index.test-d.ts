@@ -1,10 +1,12 @@
 import {expectType} from 'tsd';
 import {
+    CiscoVpnGroup,
     CiscoVpnDefaults,
     closeRdpWindow,
     connectToVpn,
     connectToVpnAndOpenRdp,
     disconnectFromVpn,
+    getAllCiscoVpnGroups,
     getCiscoVpnDefaults,
     getRdpDefaults,
     isCiscoVpnConnected,
@@ -23,6 +25,7 @@ expectType<Promise<void>>(connectToVpnAndOpenRdp({
 }, 'example-server'));
 expectType<Promise<boolean>>(isCiscoVpnConnected());
 expectType<Promise<boolean>>(isRdpWindowOpened());
+expectType<Promise<CiscoVpnGroup[]>>(getAllCiscoVpnGroups('example-server'));
 expectType<Promise<CiscoVpnDefaults>>(getCiscoVpnDefaults());
 expectType<Promise<RdpDefaults>>(getRdpDefaults());
 expectType<Promise<void>>(disconnectFromVpn());
