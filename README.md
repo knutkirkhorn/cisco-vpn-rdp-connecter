@@ -1,6 +1,8 @@
 # cisco-vpn-rdp-connecter
 > Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop (RDP) window
 
+See [FAQ](#faq) for more details and background.
+
 ## CLI
 ### Install
 ```sh
@@ -50,3 +52,15 @@ const rdpServer = 'rdp.server.name';
 #### getRdpDefaults()
 #### disconnectFromVpn()
 #### closeRdpWindow()
+
+## FAQ
+### Why this CLI?
+Instead of:
+1. open Cisco AnyConnect
+2. type in credentials and connect
+3. open Microsoft Remote Desktop
+4. select server and connect
+
+Just open a terminal and type `cisco-vpn-rdp-connecter` to do all that without the hassle.
+
+I personally use this to efficiently connect to a remote work computer.
