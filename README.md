@@ -55,5 +55,11 @@ const rdpServer = 'rdp.server.name';
 
 ## FAQ
 ### Why this CLI?
-Instead of opening Cisco AnyConnect, type in credentials and connecting, then opening Microsoft Remote Desktop and then connecting. Just open a terminal and type `cisco-vpn-rdp-connecter` to do all that without a hassle.
-I personally use this to quickly and easily connect to a remote work computer.
+Instead of:
+1. opening Cisco AnyConnect
+2. typing in credentials and connecting
+3. opening Microsoft Remote Desktop and connecting
+
+Just open a terminal and type `cisco-vpn-rdp-connecter` to do all that without the hassle.
+
+I personally use this to efficiently connect to a remote work computer.
