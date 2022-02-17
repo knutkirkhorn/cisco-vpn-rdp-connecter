@@ -18,6 +18,7 @@ const cli = meow(`
     Options
       --disconnect, -d  Disconnect from both VPN and RDP
       --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
+      --status          Show connection statuses for VPN and RDP
 `, {
     flags: {
         setup: {
@@ -27,11 +28,15 @@ const cli = meow(`
         disconnect: {
             type: 'boolean',
             alias: 'd'
+        },
+        status: {
+            type: 'boolean'
         }
     }
 });
 
 render(React.createElement(ui, {
     setup: cli.flags.setup,
-    disconnect: cli.flags.disconnect
+    disconnect: cli.flags.disconnect,
+    showConnectionStatuses: cli.flags.status
 }));

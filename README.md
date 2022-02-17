@@ -18,6 +18,7 @@ $ cisco-vpn-rdp-connecter --help
     Options
       --disconnect, -d  Disconnect from both VPN and RDP
       --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
+      --status          Show connection statuses for VPN and RDP
 ```
 
 ## API
@@ -48,6 +49,7 @@ const rdpServer = 'rdp.server.name';
 #### connectToVpn(server, group, username, password)
 #### openRdpWindow(server)
 #### isCiscoVpnConnected()
+#### isRdpWindowOpened()
 #### getCiscoVpnDefaults()
 #### getRdpDefaults()
 #### disconnectFromVpn()

@@ -8,6 +8,7 @@ import {
     getCiscoVpnDefaults,
     getRdpDefaults,
     isCiscoVpnConnected,
+    isRdpWindowOpened,
     openRdpWindow,
     RdpDefaults
 } from '.';
@@ -21,6 +22,7 @@ expectType<Promise<void>>(connectToVpnAndOpenRdp({
     password: 'supersecret'
 }, 'example-server'));
 expectType<Promise<boolean>>(isCiscoVpnConnected());
+expectType<Promise<boolean>>(isRdpWindowOpened());
 expectType<Promise<CiscoVpnDefaults>>(getCiscoVpnDefaults());
 expectType<Promise<RdpDefaults>>(getRdpDefaults());
 expectType<Promise<void>>(disconnectFromVpn());

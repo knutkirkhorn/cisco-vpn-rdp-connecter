@@ -67,6 +67,19 @@ console.log(await isCiscoVpnConnected());
 */
 export function isCiscoVpnConnected(): Promise<boolean>;
 
+/**
+Check if a Microsoft Remote Desktop window is open.
+
+@example
+```
+import {isRdpWindowOpened} = require('cisco-vpn-rdp-connecter');
+
+console.log(await isRdpWindowOpened());
+// => true
+```
+*/
+export function isRdpWindowOpened(): Promise<boolean>;
+
 interface CiscoVpnDefaults {
     server: string,
     group: string,

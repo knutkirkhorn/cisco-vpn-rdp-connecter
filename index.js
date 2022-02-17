@@ -82,6 +82,19 @@ async function isCiscoVpnConnected() {
     });
 }
 
+async function isRdpWindowOpened() {
+    return new Promise((resolve, reject) => {
+        exec('tasklist', (error, stdout) => {
+            if (error) {
+                return reject(error);
+            }
+
+            const isRdpOpened = stdout.toLowerCase().includes('mstsc');
+            return resolve(isRdpOpened);
+        });
+    });
+}
+
 async function convertGroupToGroupNumber(server, group) {
     // If it's already a number, just return it
     if (typeof group === 'number') {
@@ -157,6 +170,7 @@ module.exports.connectToVpn = connectToVpn;
 module.exports.openRdpWindow = openRdpWindow;
 module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
 module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
+module.exports.isRdpWindowOpened = isRdpWindowOpened;
 module.exports.getCiscoVpnDefaults = getCiscoVpnDefaults;
 module.exports.getRdpDefaults = getRdpDefaults;
 module.exports.disconnectFromVpn = disconnectFromVpn;
