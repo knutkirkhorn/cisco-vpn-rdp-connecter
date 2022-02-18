@@ -1,6 +1,9 @@
 const importJsx = require('import-jsx');
+const {Text, Box, useStdin} = require('ink');
 const {useState} = require('react');
 const React = require('react');
+const SelectInput = require('ink-select-input').default;
+const {getAllCiscoVpnGroups} = require('..');
 
 const SuccessMessage = importJsx('./SuccessMessage.js');
 const TextAndInputBox = importJsx('./TextAndInputBox.js');
@@ -19,17 +22,34 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [step, setStep] = useState(STEPS.VPN_SERVER);
+    const [vpnGroups, setVpnGroups] = useState(undefined);
+    const {setRawMode} = useStdin();
 
     const goToNextStep = () => {
         setStep(step + 1);
+
+        /*
+        TODO: without this it moves the input down a line after the `SelectInput` field.
+        It also requires another `enter` keypress to continue.
+        Remove this when fixed.
+        */
+        setRawMode(true);
     };
 
-    const onServerSet = inputServer => {
+    const onServerSet = async inputServer => {
         setVpnServer(inputServer);
+
+        const fetchedCiscoGroups = await getAllCiscoVpnGroups(inputServer);
+        const ciscoGroups = fetchedCiscoGroups.map(vpnGroup => ({
+            value: vpnGroup.number,
+            label: vpnGroup.name
+        }));
+        setVpnGroups(ciscoGroups);
+
         goToNextStep();
     };
 
-    const onGroupSet = inputGroup => {
+    const handleGroupSet = inputGroup => {
         setGroup(inputGroup);
         goToNextStep();
     };
@@ -54,7 +74,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
         onComplete({
             vpn: {
                 server: vpnServer,
-                group,
+                group: group.value,
                 username,
                 password
             },
@@ -79,11 +99,18 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
                 />
             )}
             {step >= STEPS.GROUP && (
-                <TextAndInputBox
-                    text="Group"
-                    defaultText={defaultCredentials.vpn.group}
-                    onSubmit={onGroupSet}
-                />
+                step === STEPS.GROUP ? (
+                    <Box>
+                        <Text>Group: </Text>
+                        <SelectInput
+                            items={vpnGroups}
+                            initialIndex={Number(defaultCredentials.vpn.group)}
+                            onSelect={handleGroupSet}
+                        />
+                    </Box>
+                ) : (
+                    <Text>{`Group: ${group.label}`}</Text>
+                )
             )}
             {step >= STEPS.USERNAME && (
                 <TextAndInputBox

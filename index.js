@@ -153,7 +153,7 @@ async function getCiscoVpnDefaults() {
     const group = await convertGroupToGroupNumber(server, groupText);
     const username = anyConnectElements.find(element => element.name === 'DefaultUser').elements[0].text;
 
-    return {server, group, username};
+    return {server, group: group.number, username};
 }
 
 async function getRdpDefaults() {

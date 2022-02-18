@@ -40,6 +40,7 @@
     "conf": "^10.1.1",
     "import-jsx": "^4.0.1",
     "ink": "^3.2.0",
+    "ink-select-input": "^4.2.1",
     "ink-spinner": "^4.0.3",
     "ink-text-input": "^4.0.3",
     "is-unicode-supported": "^0.1.0",
