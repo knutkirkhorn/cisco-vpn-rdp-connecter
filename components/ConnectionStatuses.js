@@ -1,5 +1,5 @@
 const React = require('react');
-const {Text} = require('ink');
+const {Text, useApp} = require('ink');
 const {useState, useEffect} = require('react');
 const logSymbols = require('log-symbols');
 const importJsx = require('import-jsx');
@@ -16,6 +16,7 @@ const ConnectionStatuses = () => {
     const [isVpnConnected, setIsVpnConnected] = useState(false);
     const [isRdpOpened, setIsRdpOpened] = useState(false);
     const [hasCheckedStatuses, setHasCheckedStatuses] = useState(false);
+    const {exit} = useApp();
 
     useEffect(() => {
         const checkStatuses = async () => {
@@ -26,6 +27,7 @@ const ConnectionStatuses = () => {
             setIsRdpOpened(rdpOpened);
 
             setHasCheckedStatuses(true);
+            exit();
         };
         checkStatuses();
     }, []);

@@ -2,7 +2,7 @@ const React = require('react');
 const {useState, useEffect} = require('react');
 const Conf = require('conf');
 const importJsx = require('import-jsx');
-const {Text, Box} = require('ink');
+const {Text, Box, useApp} = require('ink');
 const logSymbols = require('log-symbols');
 const {
     connectToVpn,
@@ -44,6 +44,7 @@ const Connecter = ({requestedSetup}) => {
     const [isSettingUpCredentials, setIsSettingUpCredentials] = useState(true);
     const [loadedPreviouslyUsedCredentials, setLoadedPreviouslyUsedCredentials] = useState(false);
     const [isIncorrectLoginDetails, setIsIncorrectLoginDetails] = useState(false);
+    const {exit} = useApp();
 
     useEffect(() => {
         const checkSavedCredentials = async () => {
@@ -140,7 +141,7 @@ const Connecter = ({requestedSetup}) => {
             setHasOpenedRdp(true);
 
             // TODO: remove this if I figure out how to fix that `mstsc.exe` prevents the CLI from exiting
-            process.exit();
+            exit();
         };
         checkConnectedToVpnAndOpenRdp();
     }, [credentials, isConnectedToVpn]);

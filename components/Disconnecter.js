@@ -1,6 +1,7 @@
 const React = require('react');
 const {useState, useEffect} = require('react');
 const importJsx = require('import-jsx');
+const {useApp} = require('ink');
 const {disconnectFromVpn, closeRdpWindow} = require('../index.js');
 
 const LoadingMessage = importJsx('./LoadingMessage.js');
@@ -14,6 +15,7 @@ const Disconnecter = () => {
     const [isDisconnectedFromVpn, setIsDisconnectedFromVpn] = useState(false);
     const [hasClosedRdpWindow, setHasClosedRdpWindow] = useState(false);
     const [step, setStep] = useState(STEPS.RDP);
+    const {exit} = useApp();
 
     useEffect(() => {
         const disconnectVpnAndCloseRdpWindow = async () => {
@@ -25,6 +27,7 @@ const Disconnecter = () => {
             // Disconnect from VPN
             await disconnectFromVpn();
             setIsDisconnectedFromVpn(true);
+            exit();
         };
         disconnectVpnAndCloseRdpWindow();
     }, []);

@@ -1,11 +1,16 @@
 const React = require('react');
 const importJsx = require('import-jsx');
+const {useEffect} = require('react');
 
 const Connecter = importJsx('./components/Connecter.js');
 const Disconnecter = importJsx('./components/Disconnecter.js');
 const ConnectionStatuses = importJsx('./components/ConnectionStatuses.js');
 
 const App = ({setup: requestedSetup, disconnect, showConnectionStatuses}) => {
+    useEffect(() => () => {
+        process.exit();
+    }, []);
+
     if (disconnect) {
         return <Disconnecter />;
     }
