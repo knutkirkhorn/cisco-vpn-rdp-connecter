@@ -80,6 +80,29 @@ console.log(await isRdpWindowOpened());
 */
 export function isRdpWindowOpened(): Promise<boolean>;
 
+interface CiscoVpnGroup {
+    number: string,
+    name: string
+}
+
+/**
+Get all Cisco VPN groups for a given server.
+
+@example
+```
+import {getAllCiscoVpnGroups} = require('cisco-vpn-rdp-connecter');
+
+console.log(await getAllCiscoVpnGroups('example-server'));
+=> [
+    {
+        number: '0'
+        name: 'Example group'
+    }
+]
+```
+*/
+export function getAllCiscoVpnGroups(server: string): Promise<CiscoVpnGroup[]>;
+
 interface CiscoVpnDefaults {
     server: string,
     group: string,

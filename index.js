@@ -95,17 +95,18 @@ async function isRdpWindowOpened() {
     });
 }
 
-async function convertGroupToGroupNumber(server, group) {
-    // If it's already a number, just return it
-    if (typeof group === 'number') {
-        return group;
-    }
-
+async function getAllCiscoVpnGroups(server) {
     return new Promise(resolve => {
         const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
 
-        // Default to `0` if it fails to start `connect` (already connected to VPN)
-        vpnProcess.on('close', () => resolve(0));
+        // Default to group `0` if it fails to start `connect` (already connected to VPN)
+        const defaultGroup = [
+            {
+                number: '0',
+                name: 'Default'
+            }
+        ];
+        vpnProcess.on('close', () => resolve(defaultGroup));
 
         // eslint-disable-next-line consistent-return
         vpnProcess.stdout.on('data', data => {
@@ -113,12 +114,32 @@ async function convertGroupToGroupNumber(server, group) {
                 vpnProcess.kill();
                 const groupLines = data.toString().trim()
                     .split('>> Please enter your username and password.')[1].trim().split('\n');
-                const selectedGroupLine = groupLines.find(groupLine => groupLine.trim().endsWith(group)).trim();
-                const groupNumber = selectedGroupLine.split(')')[0];
-                return resolve(groupNumber);
+                const groupLineRegex = /(\d+)\)(.*)/;
+                const groups = groupLines
+                    .map(groupLine => groupLine.trim())
+                    .filter(groupLine => groupLine.match(groupLineRegex))
+                    .map(groupLine => {
+                        const groupLineData = groupLine.split(') ');
+                        const [number, name] = groupLineData;
+                        return {
+                            number,
+                            name
+                        };
+                    });
+                return resolve(groups);
             }
         });
     });
+}
+
+async function convertGroupToGroupNumber(server, group) {
+    // If it's already a number, just return it
+    if (typeof group === 'number') {
+        return group;
+    }
+
+    const ciscoVpnGroups = await getAllCiscoVpnGroups(server);
+    return ciscoVpnGroups.find(vpnGroup => vpnGroup.name === group);
 }
 
 async function getCiscoVpnDefaults() {
@@ -132,7 +153,7 @@ async function getCiscoVpnDefaults() {
     const group = await convertGroupToGroupNumber(server, groupText);
     const username = anyConnectElements.find(element => element.name === 'DefaultUser').elements[0].text;
 
-    return {server, group, username};
+    return {server, group: group.number, username};
 }
 
 async function getRdpDefaults() {
@@ -171,6 +192,7 @@ module.exports.openRdpWindow = openRdpWindow;
 module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
 module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
 module.exports.isRdpWindowOpened = isRdpWindowOpened;
+module.exports.getAllCiscoVpnGroups = getAllCiscoVpnGroups;
 module.exports.getCiscoVpnDefaults = getCiscoVpnDefaults;
 module.exports.getRdpDefaults = getRdpDefaults;
 module.exports.disconnectFromVpn = disconnectFromVpn;
