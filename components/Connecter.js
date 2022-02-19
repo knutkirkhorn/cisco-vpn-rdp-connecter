@@ -117,6 +117,7 @@ const Connecter = ({requestedSetup}) => {
             } catch (error) {
                 if (error.message === 'Incorrect login details') {
                     setIsIncorrectLoginDetails(true);
+                    exit();
                     return;
                 }
 
