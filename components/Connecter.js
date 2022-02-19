@@ -172,9 +172,7 @@ const Connecter = ({requestedSetup}) => {
         return (
             <Box flexDirection="column">
                 <Text color="redBright" bold>
-                    {logSymbols.error}
-                    {' '}
-                    Incorrect VPN login details
+                    {`${logSymbols.error} Incorrect VPN login details`}
                 </Text>
                 <Text>
                     Use
