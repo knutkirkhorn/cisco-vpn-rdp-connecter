@@ -167,7 +167,8 @@ async function getRdpDefaults() {
 
 async function disconnectFromVpn() {
     try {
-        // TODO: passing redundant values because it requires input. Remove this when/if fixed.
+        // TODO: passing redundant values because it requires input.
+        // TODO: Remove this when/if fixed in package (https://github.com/MarkTiedemann/cisco-vpn/issues/7).
         await ciscoVpn({server: 'noop', username: 'noop', password: 'noop'}).disconnect();
     } catch (error) {
         // Check if the VPN client is not connected
