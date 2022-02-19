@@ -11,7 +11,7 @@ const regedit = require('regedit');
 async function connectToVpn(server, group, username, password) {
     // Require that all credentials are set
     if (server === undefined || group === undefined || username === undefined || password === undefined) {
-        throw new Error('Need to set all credentials for connecting to Cisco VPN!');
+        throw new Error('All credentials are required to connect to Cisco VPN');
     }
 
     // TODO: Remove when this fixed in the package (https://github.com/MarkTiedemann/cisco-vpn/issues/6)
@@ -48,7 +48,7 @@ async function connectToVpn(server, group, username, password) {
 async function openRdpWindow(server) {
     // Require that all credentials are set
     if (server === undefined) {
-        throw new Error('Need to set all credentials for opening Microsoft RDP!');
+        throw new Error('`server` is required');
     }
 
     // Open RDP window
@@ -96,6 +96,10 @@ async function isRdpWindowOpened() {
 }
 
 async function getAllCiscoVpnGroups(server) {
+    if (server === undefined) {
+        throw new Error('`server` is required');
+    }
+
     return new Promise(resolve => {
         const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
 
@@ -133,6 +137,10 @@ async function getAllCiscoVpnGroups(server) {
 }
 
 async function convertGroupToGroupNumber(server, group) {
+    if (server === undefined || group === undefined) {
+        throw new Error('Both `server` and `group` is required');
+    }
+
     // If it's already a number, just return it
     if (typeof group === 'number') {
         return group;
