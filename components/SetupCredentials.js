@@ -104,7 +104,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
                         <Text>Group: </Text>
                         <SelectInput
                             items={vpnGroups}
-                            initialIndex={Number(defaultCredentials.vpn.group)}
+                            initialIndex={Math.min(Number(defaultCredentials.vpn.group), vpnGroups.length - 1)}
                             onSelect={handleGroupSet}
                         />
                     </Box>
