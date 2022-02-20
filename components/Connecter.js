@@ -77,7 +77,9 @@ const Connecter = ({requestedSetup}) => {
             }
 
             // If all credentials are previously saved, skip the credential setup
-            if ((!!vpnCredentials.server
+            if ((typeof vpnCredentials !== 'undefined'
+                && typeof rdpCredentials !== 'undefined'
+                && !!vpnCredentials.server
                 && !!vpnCredentials.group
                 && !!vpnCredentials.username
                 && !!vpnCredentials.password
