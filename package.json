@@ -30,6 +30,9 @@
     "cli-app"
   ],
   "author": "Knut Kirkhorn",
+  "engines": {
+    "node": ">=12.20"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/knutkirkhorn/cisco-vpn-rdp-connecter/issues"
