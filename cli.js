@@ -10,6 +10,7 @@ const meow = require('meow');
 const React = require('react');
 
 const ui = importJsx('./ui.js');
+const ErrorMessage = importJsx('./components/ErrorMessage.js');
 
 const cli = meow(`
     Usage
@@ -34,6 +35,30 @@ const cli = meow(`
         }
     }
 });
+
+const enabledCliFlags = Object.entries(cli.flags).filter(flag => flag[1] === true);
+
+// Show error if multiple CLI flags are set
+if (enabledCliFlags.length > 1) {
+    render(React.createElement(ErrorMessage, {
+        message: 'Multiple CLI flags are not allowed',
+        commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
+        commandSuggestionSuffix: 'to show valid flags.'
+    }));
+
+    process.exit(1);
+}
+
+// Show error if input is not valid
+if (cli.input.length > 0) {
+    render(React.createElement(ErrorMessage, {
+        message: 'Invalid input',
+        commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
+        commandSuggestionSuffix: 'to show valid input.'
+    }));
+
+    process.exit(1);
+}
 
 render(React.createElement(ui, {
     setup: cli.flags.setup,

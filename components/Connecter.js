@@ -2,8 +2,7 @@ const React = require('react');
 const {useState, useEffect} = require('react');
 const Conf = require('conf');
 const importJsx = require('import-jsx');
-const {Text, Box, useApp} = require('ink');
-const logSymbols = require('log-symbols');
+const {useApp} = require('ink');
 const {
     connectToVpn,
     openRdpWindow,
@@ -15,6 +14,7 @@ const {
 const LoadingMessage = importJsx('./LoadingMessage.js');
 const SetupCredentials = importJsx('./SetupCredentials.js');
 const SuccessMessage = importJsx('./SuccessMessage.js');
+const ErrorMessage = importJsx('./ErrorMessage.js');
 const config = new Conf();
 
 const ConnectToVpnMessage = ({isCompleted}) => (
@@ -173,18 +173,11 @@ const Connecter = ({requestedSetup}) => {
 
     if (isIncorrectLoginDetails) {
         return (
-            <Box flexDirection="column">
-                <Text color="redBright" bold>
-                    {`${logSymbols.error} Incorrect VPN login details`}
-                </Text>
-                <Text>
-                    Use
-                    {' '}
-                    <Text dimColor>`cisco-vpn-rdp-connecter --setup`</Text>
-                    {' '}
-                    to set login details.
-                </Text>
-            </Box>
+            <ErrorMessage
+                message="Incorrect VPN login details"
+                commandSuggestion="`cisco-vpn-rdp-connecter --setup`"
+                commandSuggestionSuffix="to set login details."
+            />
         );
     }
 
