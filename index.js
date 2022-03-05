@@ -7,11 +7,22 @@ const {xml2js} = require('xml-js');
 // eslint-disable-next-line import/no-unresolved
 const {readFile} = require('fs/promises');
 const regedit = require('regedit');
+// eslint-disable-next-line import/no-unresolved
+const {promisify} = require('node:util');
+const detectSsid = require('detect-ssid');
 
 async function connectToVpn(server, group, username, password) {
     // Require that all credentials are set
     if (server === undefined || group === undefined || username === undefined || password === undefined) {
         throw new Error('All credentials are required to connect to Cisco VPN');
+    }
+
+    // Check if Wi-Fi is not connected
+    try {
+        const promsisifiedDetectSsid = promisify(detectSsid);
+        await promsisifiedDetectSsid();
+    } catch (error) {
+        throw new Error('Wi-Fi is not connected');
     }
 
     // TODO: Remove when this fixed in the package (https://github.com/MarkTiedemann/cisco-vpn/issues/6)
@@ -100,6 +111,14 @@ async function getAllCiscoVpnGroups(server) {
         throw new Error('`server` is required');
     }
 
+    // Check if Wi-Fi is not connected
+    try {
+        const promsisifiedDetectSsid = promisify(detectSsid);
+        await promsisifiedDetectSsid();
+    } catch (error) {
+        throw new Error('Wi-Fi is not connected');
+    }
+
     return new Promise(resolve => {
         const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
 
@@ -147,7 +166,13 @@ async function convertGroupToGroupNumber(server, group) {
     }
 
     const ciscoVpnGroups = await getAllCiscoVpnGroups(server);
-    return ciscoVpnGroups.find(vpnGroup => vpnGroup.name === group);
+    const groupNumber = ciscoVpnGroups.find(vpnGroup => vpnGroup.name === group);
+
+    if (groupNumber === undefined) {
+        throw new Error('Could not find matching group number');
+    }
+
+    return groupNumber;
 }
 
 async function getCiscoVpnDefaults() {

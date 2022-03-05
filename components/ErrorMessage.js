@@ -7,13 +7,15 @@ const ErrorMessage = ({message, commandSuggestion, commandSuggestionSuffix}) => 
         <Text color="redBright" bold>
             {`${logSymbols.error} ${message}`}
         </Text>
-        <Text>
-            Use
-            {' '}
-            <Text dimColor>{commandSuggestion}</Text>
-            {' '}
-            {commandSuggestionSuffix}
-        </Text>
+        {commandSuggestion && commandSuggestionSuffix && (
+            <Text>
+                Use
+                {' '}
+                <Text dimColor>{commandSuggestion}</Text>
+                {' '}
+                {commandSuggestionSuffix}
+            </Text>
+        )}
     </Box>
 );
 

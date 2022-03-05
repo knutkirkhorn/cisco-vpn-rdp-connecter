@@ -44,6 +44,7 @@ const Connecter = ({requestedSetup}) => {
     const [isSettingUpCredentials, setIsSettingUpCredentials] = useState(true);
     const [loadedPreviouslyUsedCredentials, setLoadedPreviouslyUsedCredentials] = useState(false);
     const [isIncorrectLoginDetails, setIsIncorrectLoginDetails] = useState(false);
+    const [isConnectedToWifi, setIsConnectedToWifi] = useState(true);
     const {exit} = useApp();
 
     useEffect(() => {
@@ -53,41 +54,52 @@ const Connecter = ({requestedSetup}) => {
             const {rdp: rdpCredentials} = savedCredentials;
 
             const isVpnConnected = await isCiscoVpnConnected();
-            const ciscoVpnDefaults = isVpnConnected ? {} : await getCiscoVpnDefaults();
-            const rdpDefaults = await getRdpDefaults();
 
-            setCredentials({
-                vpn: {
-                    server: ciscoVpnDefaults.server,
-                    group: ciscoVpnDefaults.group,
-                    username: ciscoVpnDefaults.username,
-                    ...vpnCredentials
-                },
-                rdp: {
-                    server: rdpDefaults.server,
-                    ...rdpCredentials
+            try {
+                const ciscoVpnDefaults = isVpnConnected ? {} : await getCiscoVpnDefaults();
+                const rdpDefaults = await getRdpDefaults();
+
+                setCredentials({
+                    vpn: {
+                        server: ciscoVpnDefaults.server,
+                        group: ciscoVpnDefaults.group,
+                        username: ciscoVpnDefaults.username,
+                        ...vpnCredentials
+                    },
+                    rdp: {
+                        server: rdpDefaults.server,
+                        ...rdpCredentials
+                    }
+                });
+
+                setIsCheckingSavedCredentials(false);
+
+                // Return early if requested a new credential setup
+                if (requestedSetup) {
+                    return;
                 }
-            });
 
-            setIsCheckingSavedCredentials(false);
+                // If all credentials are previously saved, skip the credential setup
+                if ((typeof vpnCredentials !== 'undefined'
+                    && typeof rdpCredentials !== 'undefined'
+                    && !!vpnCredentials.server
+                    && !!vpnCredentials.group
+                    && !!vpnCredentials.username
+                    && !!vpnCredentials.password
+                    && !!rdpCredentials.server)
+                    || isVpnConnected
+                ) {
+                    setIsSettingUpCredentials(false);
+                    setLoadedPreviouslyUsedCredentials(true);
+                }
+            } catch (error) {
+                if (error.message === 'Wi-Fi is not connected') {
+                    setIsConnectedToWifi(false);
+                }
 
-            // Return early if requested a new credential setup
-            if (requestedSetup) {
-                return;
-            }
-
-            // If all credentials are previously saved, skip the credential setup
-            if ((typeof vpnCredentials !== 'undefined'
-                && typeof rdpCredentials !== 'undefined'
-                && !!vpnCredentials.server
-                && !!vpnCredentials.group
-                && !!vpnCredentials.username
-                && !!vpnCredentials.password
-                && !!rdpCredentials.server)
-                || isVpnConnected
-            ) {
+                setIsCheckingSavedCredentials(false);
                 setIsSettingUpCredentials(false);
-                setLoadedPreviouslyUsedCredentials(true);
+                exit();
             }
         };
         checkSavedCredentials();
@@ -96,6 +108,10 @@ const Connecter = ({requestedSetup}) => {
     useEffect(() => {
         const checkCredentialsSetupAndConnectToVpn = async () => {
             if (isSettingUpCredentials) {
+                return;
+            }
+
+            if (!isConnectedToWifi) {
                 return;
             }
 
@@ -119,6 +135,12 @@ const Connecter = ({requestedSetup}) => {
             } catch (error) {
                 if (error.message === 'Incorrect login details') {
                     setIsIncorrectLoginDetails(true);
+                    exit();
+                    return;
+                }
+
+                if (error.message === 'Wi-Fi is not connected') {
+                    setIsConnectedToWifi(false);
                     exit();
                     return;
                 }
@@ -168,6 +190,12 @@ const Connecter = ({requestedSetup}) => {
                 onComplete={onCredentialsSet}
                 defaultCredentials={credentials}
             />
+        );
+    }
+
+    if (!isConnectedToWifi) {
+        return (
+            <ErrorMessage message="Wi-Fi is not connected" />
         );
     }
 
