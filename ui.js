@@ -8,7 +8,7 @@ const ConnectionStatuses = importJsx('./components/ConnectionStatuses.js');
 
 const App = ({setup: requestedSetup, disconnect, showConnectionStatuses}) => {
     useEffect(() => () => {
-        process.exit();
+        process.exit(0);
     }, []);
 
     if (disconnect) {
