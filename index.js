@@ -7,9 +7,7 @@ const {xml2js} = require('xml-js');
 // eslint-disable-next-line import/no-unresolved
 const {readFile} = require('fs/promises');
 const regedit = require('regedit');
-// eslint-disable-next-line import/no-unresolved
-const {promisify} = require('node:util');
-const detectSsid = require('detect-ssid');
+const isOnline = require('is-online');
 
 async function connectToVpn(server, group, username, password) {
     // Require that all credentials are set
@@ -17,12 +15,11 @@ async function connectToVpn(server, group, username, password) {
         throw new Error('All credentials are required to connect to Cisco VPN');
     }
 
-    // Check if Wi-Fi is not connected
-    try {
-        const promsisifiedDetectSsid = promisify(detectSsid);
-        await promsisifiedDetectSsid();
-    } catch (error) {
-        throw new Error('Wi-Fi is not connected');
+    // Check if internet is not connected
+    const hasInternetConnection = await isOnline();
+
+    if (!hasInternetConnection) {
+        throw new Error('No internet connection');
     }
 
     // TODO: Remove when this fixed in the package (https://github.com/MarkTiedemann/cisco-vpn/issues/6)
@@ -111,12 +108,11 @@ async function getAllCiscoVpnGroups(server) {
         throw new Error('`server` is required');
     }
 
-    // Check if Wi-Fi is not connected
-    try {
-        const promsisifiedDetectSsid = promisify(detectSsid);
-        await promsisifiedDetectSsid();
-    } catch (error) {
-        throw new Error('Wi-Fi is not connected');
+    // Check if internet is not connected
+    const hasInternetConnection = await isOnline();
+
+    if (!hasInternetConnection) {
+        throw new Error('No internet connection');
     }
 
     return new Promise(resolve => {

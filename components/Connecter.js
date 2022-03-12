@@ -44,7 +44,7 @@ const Connecter = ({requestedSetup}) => {
     const [isSettingUpCredentials, setIsSettingUpCredentials] = useState(true);
     const [loadedPreviouslyUsedCredentials, setLoadedPreviouslyUsedCredentials] = useState(false);
     const [isIncorrectLoginDetails, setIsIncorrectLoginDetails] = useState(false);
-    const [isConnectedToWifi, setIsConnectedToWifi] = useState(true);
+    const [isConnectedToInternet, setIsConnectedToInternet] = useState(true);
     const {exit} = useApp();
 
     useEffect(() => {
@@ -93,8 +93,8 @@ const Connecter = ({requestedSetup}) => {
                     setLoadedPreviouslyUsedCredentials(true);
                 }
             } catch (error) {
-                if (error.message === 'Wi-Fi is not connected') {
-                    setIsConnectedToWifi(false);
+                if (error.message === 'No internet connection') {
+                    setIsConnectedToInternet(false);
                 }
 
                 setIsCheckingSavedCredentials(false);
@@ -111,7 +111,7 @@ const Connecter = ({requestedSetup}) => {
                 return;
             }
 
-            if (!isConnectedToWifi) {
+            if (!isConnectedToInternet) {
                 return;
             }
 
@@ -139,8 +139,8 @@ const Connecter = ({requestedSetup}) => {
                     return;
                 }
 
-                if (error.message === 'Wi-Fi is not connected') {
-                    setIsConnectedToWifi(false);
+                if (error.message === 'No internet connection') {
+                    setIsConnectedToInternet(false);
                     exit();
                     return;
                 }
@@ -193,9 +193,9 @@ const Connecter = ({requestedSetup}) => {
         );
     }
 
-    if (!isConnectedToWifi) {
+    if (!isConnectedToInternet) {
         return (
-            <ErrorMessage message="Wi-Fi is not connected" />
+            <ErrorMessage message="No internet connection" />
         );
     }
 
