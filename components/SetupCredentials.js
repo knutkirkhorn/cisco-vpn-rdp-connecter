@@ -84,7 +84,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
         });
     };
 
-    // If all steps are compeleted show "completed" message
+    // If all steps are completed show "completed" message
     if (step > STEPS.RDP_SERVER) {
         return <SuccessMessage message="Setup completed" />;
     }
