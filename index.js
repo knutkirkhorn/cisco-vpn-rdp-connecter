@@ -127,26 +127,35 @@ async function getAllCiscoVpnGroups(server) {
         ];
         vpnProcess.on('close', () => resolve(defaultGroup));
 
-        // eslint-disable-next-line consistent-return
         vpnProcess.stdout.on('data', data => {
-            if (data.includes('Group: ')) {
-                vpnProcess.kill();
-                const groupLines = data.toString().trim()
-                    .split('>> Please enter your username and password.')[1].trim().split('\n');
-                const groupLineRegex = /(\d+)\)(.*)/;
-                const groups = groupLines
-                    .map(groupLine => groupLine.trim())
-                    .filter(groupLine => groupLine.match(groupLineRegex))
-                    .map(groupLine => {
-                        const groupLineData = groupLine.split(') ');
-                        const [number, name] = groupLineData;
-                        return {
-                            number,
-                            name
-                        };
-                    });
-                return resolve(groups);
+            if (!data.includes('Group: ')) {
+                return;
             }
+
+            const untrimmedGroupLines = data.toString().trim()
+                .split('>> Please enter your username and password.');
+
+            // Ensure it contains the groups
+            if (!untrimmedGroupLines || untrimmedGroupLines.length < 2) {
+                return;
+            }
+
+            vpnProcess.kill();
+            const groupLines = untrimmedGroupLines[1].trim().split('\n');
+            const groupLineRegex = /(\d+)\)(.*)/;
+            const groups = groupLines
+                .map(groupLine => groupLine.trim())
+                .filter(groupLine => groupLine.match(groupLineRegex))
+                .map(groupLine => {
+                    const groupLineData = groupLine.split(') ');
+                    const [number, name] = groupLineData;
+                    return {
+                        number,
+                        name
+                    };
+                });
+            // eslint-disable-next-line consistent-return
+            return resolve(groups);
         });
     });
 }
