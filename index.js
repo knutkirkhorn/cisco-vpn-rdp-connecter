@@ -133,15 +133,10 @@ async function getAllCiscoVpnGroups(server) {
             }
 
             const untrimmedGroupLines = data.toString().trim()
-                .split('>> Please enter your username and password.');
-
-            // Ensure it contains the groups
-            if (!untrimmedGroupLines || untrimmedGroupLines.length < 2) {
-                return;
-            }
+                .replaceAll('>> Please enter your username and password.', '');
 
             vpnProcess.kill();
-            const groupLines = untrimmedGroupLines[1].trim().split('\n');
+            const groupLines = untrimmedGroupLines.trim().split('\n');
             const groupLineRegex = /(\d+)\)(.*)/;
             const groups = groupLines
                 .map(groupLine => groupLine.trim())
