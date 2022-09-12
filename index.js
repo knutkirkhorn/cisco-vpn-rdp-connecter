@@ -2,7 +2,7 @@ const ciscoVpn = require('cisco-vpn');
 const {spawn, exec} = require('node:child_process');
 const path = require('node:path');
 const {xml2js} = require('xml-js');
-const {readFile} = require('fs/promises');
+const {readFile} = require('node:fs/promises');
 const regedit = require('regedit');
 const isOnline = require('is-online');
 
@@ -39,14 +39,12 @@ async function connectToVpn(server, group, username, password) {
         }
 
         const vpnCliConnectedMessage = `>> notice: Connected to ${server}.`;
-        const isVpnConnectedRegex = /(.*)>> error: Connect not available. Another AnyConnect application is running(\r)+\nor this functionality was not requested by this application./gi;
+        const isVpnConnectedRegex = /(.*)>> error: connect not available. another anyconnect application is running(\r)+\nor this functionality was not requested by this application./gi;
         const isVpnAlreadyConnected = trimmedErrorMessage.endsWith(vpnCliConnectedMessage) || trimmedErrorMessage.match(isVpnConnectedRegex);
 
-        if (isVpnAlreadyConnected) {
-            throw new Error('Already connected to VPN!');
-        } else {
-            throw new Error(error);
-        }
+        throw isVpnAlreadyConnected
+            ? new Error('Already connected to VPN!')
+            : new Error(error);
     }
 }
 
@@ -78,7 +76,7 @@ async function isCiscoVpnConnected() {
 
             const returnMessage = stdout.toString();
             const vpnState = returnMessage.trim()
-                .match(/(.*)Connection State:(.*)/gi)
+                .match(/(.*)connection state:(.*)/gi)
                 .find(match => !match.includes('management')).trim()
                 .split(':')[1].trim();
 
@@ -174,7 +172,7 @@ async function convertGroupToGroupNumber(server, group) {
 
 async function getCiscoVpnDefaults() {
     const filePath = path.join(process.env.APPDATA, '..\\Local\\Cisco\\Cisco AnyConnect Secure Mobility Client\\preferences.xml');
-    const xmlFile = await readFile(filePath, 'utf-8');
+    const xmlFile = await readFile(filePath, 'utf8');
     const anyConnectXmlElement = xml2js(xmlFile).elements[0];
     const anyConnectElements = anyConnectXmlElement.elements;
 
