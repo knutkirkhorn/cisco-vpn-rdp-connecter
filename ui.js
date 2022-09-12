@@ -8,6 +8,7 @@ const ConnectionStatuses = importJsx('./components/ConnectionStatuses.js');
 
 const App = ({setup: requestedSetup, disconnect, showConnectionStatuses}) => {
     useEffect(() => () => {
+        // eslint-disable-next-line unicorn/no-process-exit
         process.exit(0);
     }, []);
 

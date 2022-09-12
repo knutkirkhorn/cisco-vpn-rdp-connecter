@@ -22,7 +22,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [step, setStep] = useState(STEPS.VPN_SERVER);
-    const [vpnGroups, setVpnGroups] = useState(undefined);
+    const [vpnGroups, setVpnGroups] = useState();
     const {setRawMode} = useStdin();
 
     const goToNextStep = () => {
