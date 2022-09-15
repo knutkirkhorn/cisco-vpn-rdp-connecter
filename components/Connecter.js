@@ -33,7 +33,7 @@ const OpeningRdpMessage = ({isCompleted}) => (
     />
 );
 
-const Connecter = ({requestedSetup}) => {
+const Connecter = ({requestedSetup, onlyVpn}) => {
     const [isConnectedToVpn, setIsConnectedToVpn] = useState(false);
     const [hasOpenedRdp, setHasOpenedRdp] = useState(false);
     const [credentials, setCredentials] = useState({
@@ -57,7 +57,7 @@ const Connecter = ({requestedSetup}) => {
 
             try {
                 const ciscoVpnDefaults = isVpnConnected ? {} : await getCiscoVpnDefaults();
-                const rdpDefaults = await getRdpDefaults();
+                const rdpDefaults = onlyVpn ? {} : await getRdpDefaults();
 
                 setCredentials({
                     vpn: {
@@ -161,9 +161,11 @@ const Connecter = ({requestedSetup}) => {
                 return;
             }
 
-            const {server} = credentials.rdp;
-            await openRdpWindow(server);
-            setHasOpenedRdp(true);
+            if (!onlyVpn) {
+                const {server} = credentials.rdp;
+                await openRdpWindow(server);
+                setHasOpenedRdp(true);
+            }
 
             // TODO: remove this if I figure out how to fix that `mstsc.exe` prevents the CLI from exiting
             exit();
@@ -221,7 +223,11 @@ const Connecter = ({requestedSetup}) => {
             )}
             <ConnectToVpnMessage isCompleted={isConnectedToVpn} />
             {isConnectedToVpn && (
-                <OpeningRdpMessage isCompleted={hasOpenedRdp} />
+                onlyVpn ? (
+                    <SuccessMessage message="Skipping Remote Desktop" />
+                ) : (
+                    <OpeningRdpMessage isCompleted={hasOpenedRdp} />
+                )
             )}
         </>
     );

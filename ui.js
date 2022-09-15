@@ -7,7 +7,7 @@ const Disconnecter = importJsx('./components/Disconnecter.js');
 const ConnectionStatuses = importJsx('./components/ConnectionStatuses.js');
 const ErrorMessage = importJsx('./components/ErrorMessage.js');
 
-const App = ({command, setup: requestedSetup}) => {
+const App = ({command, setup: requestedSetup, onlyVpn}) => {
     useEffect(() => () => {
         // eslint-disable-next-line unicorn/no-process-exit
         process.exit(0);
@@ -15,7 +15,7 @@ const App = ({command, setup: requestedSetup}) => {
 
     switch (command) {
         case undefined:
-            return <Connecter requestedSetup={requestedSetup} />;
+            return <Connecter requestedSetup={requestedSetup} onlyVpn={onlyVpn} />;
         case 'd':
         case 'disconnect':
             return <Disconnecter />;

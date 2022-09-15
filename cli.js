@@ -23,30 +23,28 @@ const cli = meow(`
 
     Options
       --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
+      --only-vpn, -o    Only connect to VPN
 `, {
     flags: {
         setup: {
             type: 'boolean',
             alias: 's'
+        },
+        onlyVpn: {
+            type: 'boolean',
+            alias: 'o'
         }
     }
 });
 
-const enabledCliFlags = Object.entries(cli.flags).filter(flag => flag[1] === true);
-
-// Show error if multiple CLI flags are set
-if (enabledCliFlags.length > 1) {
-    render(React.createElement(ErrorMessage, {
-        message: 'Multiple CLI flags are not allowed',
-        commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
-        commandSuggestionSuffix: 'to show valid flags.'
-    }));
-
-    process.exit(1);
-}
+const enabledCliFlags = Object.entries(cli.flags)
+    .filter(flag => flag[1] === true)
+    .map(flag => flag[0]);
+const supportedFlags = new Set(['setup', 'onlyVpn']);
+const inputHasUnsupportedFlags = enabledCliFlags.some(flag => !supportedFlags.has(flag));
 
 // Show error if input is not valid
-if (cli.input.length > 1 || (enabledCliFlags.length === 1 && !cli.flags.setup)) {
+if (cli.input.length > 1 || inputHasUnsupportedFlags) {
     render(React.createElement(ErrorMessage, {
         message: 'Invalid input',
         commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
@@ -58,4 +56,8 @@ if (cli.input.length > 1 || (enabledCliFlags.length === 1 && !cli.flags.setup)) 
 
 const [command] = cli.input;
 
-render(React.createElement(ui, {command, setup: cli.flags.setup}));
+render(React.createElement(ui, {
+    command,
+    setup: cli.flags.setup,
+    onlyVpn: cli.flags.onlyVpn
+}));
