@@ -16,22 +16,18 @@ const cli = meow(`
     Usage
       $ cisco-vpn-rdp-connecter
 
+    Commands
+      <none>            Connect to both VPN and RDP
+      disconnect, d     Disconnect from both VPN and RDP
+      status            Show connection statuses for VPN and RDP
+
     Options
-      --disconnect, -d  Disconnect from both VPN and RDP
       --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
-      --status          Show connection statuses for VPN and RDP
 `, {
     flags: {
         setup: {
             type: 'boolean',
             alias: 's'
-        },
-        disconnect: {
-            type: 'boolean',
-            alias: 'd'
-        },
-        status: {
-            type: 'boolean'
         }
     }
 });
@@ -50,7 +46,7 @@ if (enabledCliFlags.length > 1) {
 }
 
 // Show error if input is not valid
-if (cli.input.length > 0) {
+if (cli.input.length > 1 || (enabledCliFlags.length === 1 && !cli.flags.setup)) {
     render(React.createElement(ErrorMessage, {
         message: 'Invalid input',
         commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
@@ -60,8 +56,6 @@ if (cli.input.length > 0) {
     process.exit(1);
 }
 
-render(React.createElement(ui, {
-    setup: cli.flags.setup,
-    disconnect: cli.flags.disconnect,
-    showConnectionStatuses: cli.flags.status
-}));
+const [command] = cli.input;
+
+render(React.createElement(ui, {command, setup: cli.flags.setup}));
