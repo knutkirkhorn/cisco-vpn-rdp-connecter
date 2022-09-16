@@ -20,7 +20,7 @@ const App = ({command, setup: requestedSetup, onlyVpn}) => {
         case 'disconnect':
             return <Disconnecter />;
         case 'status':
-            return <ConnectionStatuses />;
+            return <ConnectionStatuses onlyVpn={onlyVpn} />;
         default:
             return (
                 <ErrorMessage

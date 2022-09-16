@@ -12,7 +12,7 @@ const StatusMessage = ({okStatus, type, message}) => (
     <Text>{`${okStatus ? logSymbols.success : logSymbols.error} ${type}: ${message}`}</Text>
 );
 
-const ConnectionStatuses = () => {
+const ConnectionStatuses = ({onlyVpn}) => {
     const [isVpnConnected, setIsVpnConnected] = useState(false);
     const [isRdpOpened, setIsRdpOpened] = useState(false);
     const [hasCheckedStatuses, setHasCheckedStatuses] = useState(false);
@@ -39,7 +39,11 @@ const ConnectionStatuses = () => {
     return (
         <>
             <StatusMessage okStatus={isVpnConnected} type="VPN" message={isVpnConnected ? 'connected' : 'disconnected'} />
-            <StatusMessage okStatus={isRdpOpened} type="RDP" message={isRdpOpened ? 'opened' : 'not opened'} />
+            {onlyVpn ? (
+                <Text>- RDP: skipped check</Text>
+            ) : (
+                <StatusMessage okStatus={isRdpOpened} type="RDP" message={isRdpOpened ? 'opened' : 'not opened'} />
+            )}
         </>
     );
 };
