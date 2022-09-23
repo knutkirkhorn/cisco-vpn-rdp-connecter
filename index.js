@@ -5,6 +5,12 @@ const {xml2js} = require('xml-js');
 const {readFile} = require('node:fs/promises');
 const regedit = require('regedit');
 const isOnline = require('is-online');
+const {homedir} = require('node:os');
+
+const ciscoVpnCliPaths = {
+    win32: 'C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe',
+    darwin: '/opt/cisco/anyconnect/bin/vpn'
+};
 
 async function connectToVpn(server, group, username, password) {
     // Require that all credentials are set
@@ -22,16 +28,31 @@ async function connectToVpn(server, group, username, password) {
     // TODO: Remove when this fixed in the package (https://github.com/MarkTiedemann/cisco-vpn/issues/6)
     const combinedVpnGroupAndUsername = `${group}\n${username}`;
 
+    const ciscoVpnCliPath = ciscoVpnCliPaths[process.platform];
+
+    if (!ciscoVpnCliPath) {
+        throw new Error(`Unsupported architecture \`${process.platform}\``);
+    }
+
     const vpn = ciscoVpn({
         server,
         username: combinedVpnGroupAndUsername,
-        password
+        password,
+        exe: ciscoVpnCliPath
     });
 
     try {
         await vpn.connect();
     } catch (error) {
         const trimmedErrorMessage = error.message.replaceAll('VPN>', '').trim();
+
+        if (process.platform === 'darwin') {
+            // If macOS, response ends with both connected and connect to <server>
+            // So check next last line if it says disconnected
+            const nextLastLine = trimmedErrorMessage.split('\n')[trimmedErrorMessage.split('\n').length - 2].trim();
+
+            if (nextLastLine === '>> state: Connected') return;
+        }
 
         const isIncorrectLoginDetails = trimmedErrorMessage.endsWith('Login failed.');
         if (isIncorrectLoginDetails) {
@@ -68,8 +89,14 @@ async function connectToVpnAndOpenRdp(vpnCredentials, rdpServer) {
 }
 
 async function isCiscoVpnConnected() {
+    const ciscoVpnCliPath = ciscoVpnCliPaths[process.platform];
+
+    if (!ciscoVpnCliPath) {
+        throw new Error(`Unsupported architecture \`${process.platform}\``);
+    }
+
     return new Promise((resolve, reject) => {
-        exec('"C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe" stats', (error, stdout) => {
+        exec(`"${ciscoVpnCliPath}" stats`, (error, stdout) => {
             if (error) {
                 return reject(error);
             }
@@ -110,8 +137,10 @@ async function getAllCiscoVpnGroups(server) {
         throw new Error('No internet connection');
     }
 
+    const ciscoVpnCliPath = ciscoVpnCliPaths[process.platform];
+
     return new Promise(resolve => {
-        const vpnProcess = spawn('C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe', ['connect', server]);
+        const vpnProcess = spawn(ciscoVpnCliPath, ['connect', server]);
 
         // Default to group `0` if it fails to start `connect` (already connected to VPN)
         const defaultGroup = [
@@ -171,7 +200,18 @@ async function convertGroupToGroupNumber(server, group) {
 }
 
 async function getCiscoVpnDefaults() {
-    const filePath = path.join(process.env.APPDATA, '..\\Local\\Cisco\\Cisco AnyConnect Secure Mobility Client\\preferences.xml');
+    let filePath = '';
+
+    if (process.platform === 'win32') {
+        filePath = path.join(process.env.APPDATA, '..\\Local\\Cisco\\Cisco AnyConnect Secure Mobility Client\\preferences.xml');
+    } else if (process.platform === 'darwin') {
+        filePath = path.join(homedir(), '.anyconnect');
+    }
+
+    if (!filePath) {
+        throw new Error(`Unsupported architecture \`${process.platform}\``);
+    }
+
     const xmlFile = await readFile(filePath, 'utf8');
     const anyConnectXmlElement = xml2js(xmlFile).elements[0];
     const anyConnectElements = anyConnectXmlElement.elements;
@@ -195,13 +235,32 @@ async function getRdpDefaults() {
 
 async function disconnectFromVpn() {
     try {
+        const ciscoVpnCliPath = ciscoVpnCliPaths[process.platform];
+
+        if (!ciscoVpnCliPath) {
+            throw new Error(`Unsupported architecture \`${process.platform}\``);
+        }
+
         // TODO: passing redundant values because it requires input.
         // TODO: Remove this when/if fixed in package (https://github.com/MarkTiedemann/cisco-vpn/issues/7).
-        await ciscoVpn({server: 'noop', username: 'noop', password: 'noop'}).disconnect();
+        await ciscoVpn({
+            server: 'noop',
+            username: 'noop',
+            password: 'noop',
+            exe: ciscoVpnCliPath
+        }).disconnect();
     } catch (error) {
         // Check if the VPN client is not connected
         const trimmedErrorMessage = error.message.replaceAll('VPN>', '').trim();
         const isVpnAlreadyDisconnected = trimmedErrorMessage.endsWith('The VPN client is not connected.');
+
+        if (process.platform === 'darwin') {
+            // If macOS, response ends with both disconnected and ready to connect
+            // So check next last line if it says disconnected
+            const nextLastLine = trimmedErrorMessage.split('\n')[trimmedErrorMessage.split('\n').length - 2].trim();
+
+            if (nextLastLine === '>> state: Disconnected') return;
+        }
 
         if (!isVpnAlreadyDisconnected) {
             throw new Error(error);
