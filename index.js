@@ -6,6 +6,7 @@ const {readFile} = require('node:fs/promises');
 const regedit = require('regedit');
 const isOnline = require('is-online');
 const {homedir} = require('node:os');
+const psList = require('ps-list');
 
 const ciscoVpnCliPaths = {
     win32: 'C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe',
@@ -75,10 +76,27 @@ async function openRdpWindow(server) {
         throw new Error('`server` is required');
     }
 
+    const rdpCommands = {
+        win32: {
+            command: 'cmd.exe',
+            args: ['/c', 'start', 'mstsc.exe', `/v:${server}`]
+        },
+        darwin: {
+            command: 'open',
+            args: ['/Applications/Microsoft Remote Desktop.app']
+        }
+    };
+
+    if (!(process.platform in rdpCommands)) {
+        throw new Error(`Unsupported architecture \`${process.platform}\``);
+    }
+
+    const {command, args} = rdpCommands[process.platform];
+
     // Open RDP window
     return new Promise(resolve => {
         // Needs to promisify `spawn` because `spawnSync` does not return after starting `mstsc`
-        const rdpProcess = spawn('cmd.exe', ['/c', 'start', 'mstsc.exe', `/v:${server}`]);
+        const rdpProcess = spawn(command, args);
         rdpProcess.on('exit', () => resolve());
     });
 }
@@ -113,6 +131,11 @@ async function isCiscoVpnConnected() {
 }
 
 async function isRdpWindowOpened() {
+    if (process.platform === 'darwin') {
+        const processList = await psList();
+        return processList.some(app => app.cmd === '/Applications/Microsoft Remote Desktop.app/Contents/MacOS/Microsoft Remote Desktop');
+    }
+
     return new Promise((resolve, reject) => {
         exec('tasklist', (error, stdout) => {
             if (error) {
@@ -269,8 +292,25 @@ async function disconnectFromVpn() {
 }
 
 async function closeRdpWindow() {
+    const rdpCloseCommands = {
+        win32: {
+            command: 'taskkill',
+            args: ['/im', 'mstsc.exe']
+        },
+        darwin: {
+            command: 'pkill',
+            args: ['Microsoft Remote Desktop']
+        }
+    };
+
+    if (!(process.platform in rdpCloseCommands)) {
+        throw new Error(`Unsupported architecture \`${process.platform}\``);
+    }
+
+    const {command, args} = rdpCloseCommands[process.platform];
+
     return new Promise(resolve => {
-        const rdpProcess = spawn('taskkill', ['/im', 'mstsc.exe']);
+        const rdpProcess = spawn(command, args);
         rdpProcess.on('exit', () => resolve());
     });
 }
