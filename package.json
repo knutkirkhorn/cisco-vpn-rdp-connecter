@@ -53,6 +53,7 @@
     "ps-list": "^7.2.0",
     "react": "^17.0.2",
     "regedit": "^5.1.1",
+    "sqlite3": "^5.1.1",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {

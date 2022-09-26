@@ -7,6 +7,7 @@ const regedit = require('regedit');
 const isOnline = require('is-online');
 const {homedir} = require('node:os');
 const psList = require('ps-list');
+const sqlite3 = require('sqlite3');
 
 const ciscoVpnCliPaths = {
     win32: 'C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe',
@@ -248,6 +249,24 @@ async function getCiscoVpnDefaults() {
 }
 
 async function getRdpDefaults() {
+    if (process.platform === 'darwin') {
+        const rdpSqliteDatabasePath = path.join(
+            homedir(),
+            '/Library/Containers/com.microsoft.rdc.macos/Data/Library/Application Support/com.microsoft.rdc.macos/com.microsoft.rdc.application-data.sqlite'
+        );
+        const database = new sqlite3.Database(rdpSqliteDatabasePath);
+        const server = await new Promise((resolve, reject) => {
+            // Return the hostname for the first saved RDP connection
+            database.get('SELECT ZHOSTNAME FROM ZBOOKMARKENTITY LIMIT 1', (error, row) => {
+                if (error) return reject(error);
+
+                const {ZHOSTNAME: host} = row;
+                return resolve(host);
+            });
+        });
+        return {server};
+    }
+
     // Read more here https://docs.microsoft.com/en-us/troubleshoot/windows-server/remote/remove-entries-from-remote-desktop-connection-computer#remove-entries-in-the-mac-remote-desktop-connection-client
     const recentServerRegistryKey = 'HKCU\\Software\\Microsoft\\Terminal Server Client\\Default';
     const registryResult = await regedit.promisified.list([recentServerRegistryKey]);
