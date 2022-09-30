@@ -2,7 +2,7 @@ const React = require('react');
 const {useState, useEffect} = require('react');
 const Conf = require('conf');
 const importJsx = require('import-jsx');
-const {useApp} = require('ink');
+const {useApp, useStdin} = require('ink');
 const {
     connectToVpn,
     openRdpWindow,
@@ -46,6 +46,7 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
     const [isIncorrectLoginDetails, setIsIncorrectLoginDetails] = useState(false);
     const [isConnectedToInternet, setIsConnectedToInternet] = useState(true);
     const {exit} = useApp();
+    const {setRawMode} = useStdin();
 
     useEffect(() => {
         const checkSavedCredentials = async () => {
@@ -183,6 +184,12 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
     };
 
     if (isCheckingSavedCredentials) {
+        /*
+        TODO: without this it moves the input down a line after the `SelectInput` field.
+        This makes the input in the setup not usable.
+        Remove this when fixed.
+        */
+        setRawMode(true);
         return <LoadingMessage loadingMessage="Loading configs" />;
     }
 
