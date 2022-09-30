@@ -7,6 +7,7 @@ const {getAllCiscoVpnGroups} = require('..');
 
 const SuccessMessage = importJsx('./SuccessMessage.js');
 const TextAndInputBox = importJsx('./TextAndInputBox.js');
+const LoadingMessage = importJsx('./LoadingMessage.js');
 
 const STEPS = {
     VPN_SERVER: 0,
@@ -24,6 +25,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
     const [step, setStep] = useState(STEPS.VPN_SERVER);
     const [vpnGroups, setVpnGroups] = useState();
     const {setRawMode} = useStdin();
+    const [isRetrievingVpnGroups, setIsRetrievingVpnGroups] = useState(false);
 
     const goToNextStep = () => {
         setStep(step + 1);
@@ -39,12 +41,16 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
     const onServerSet = async inputServer => {
         setVpnServer(inputServer);
 
+        // Show loader when fetching Cisco groups
+        setIsRetrievingVpnGroups(true);
+
         const fetchedCiscoGroups = await getAllCiscoVpnGroups(inputServer);
         const ciscoGroups = fetchedCiscoGroups.map(vpnGroup => ({
             value: vpnGroup.number,
             label: vpnGroup.name
         }));
         setVpnGroups(ciscoGroups);
+        setIsRetrievingVpnGroups(false);
 
         goToNextStep();
     };
@@ -92,11 +98,18 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
     return (
         <>
             {step >= STEPS.VPN_SERVER && (
-                <TextAndInputBox
-                    text="VPN server"
-                    defaultText={defaultCredentials.vpn.server}
-                    onSubmit={onServerSet}
-                />
+                <>
+                    <TextAndInputBox
+                        text="VPN server"
+                        defaultText={defaultCredentials.vpn.server}
+                        onSubmit={onServerSet}
+                    />
+                    {
+                        isRetrievingVpnGroups && (
+                            <LoadingMessage isCompleted={false} loadingMessage="Retrieving VPN groups for given server" loadedMessage="" />
+                        )
+                    }
+                </>
             )}
             {step >= STEPS.GROUP && (
                 step === STEPS.GROUP ? (
