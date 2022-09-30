@@ -214,13 +214,13 @@ async function convertGroupToGroupNumber(server, group) {
     }
 
     const ciscoVpnGroups = await getAllCiscoVpnGroups(server);
-    const groupNumber = ciscoVpnGroups.find(vpnGroup => vpnGroup.name === group);
+    const groupObject = ciscoVpnGroups.find(vpnGroup => vpnGroup.name === group);
 
-    if (groupNumber === undefined) {
+    if (groupObject === undefined || groupObject.number === undefined) {
         throw new Error('Could not find matching group number');
     }
 
-    return groupNumber;
+    return groupObject.number;
 }
 
 async function getCiscoVpnDefaults() {
@@ -242,10 +242,9 @@ async function getCiscoVpnDefaults() {
 
     const server = anyConnectElements.find(element => element.name === 'DefaultHostName').elements[0].text;
     const groupText = anyConnectElements.find(element => element.name === 'DefaultGroup').elements[0].text;
-    const group = await convertGroupToGroupNumber(server, groupText);
     const username = anyConnectElements.find(element => element.name === 'DefaultUser').elements[0].text;
-
-    return {server, group: group.number, username};
+    const groupNumber = await convertGroupToGroupNumber(server, groupText);
+    return {server, group: groupNumber, username};
 }
 
 async function getRdpDefaults() {
