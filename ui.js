@@ -19,6 +19,7 @@ const App = ({command, setup: requestedSetup, onlyVpn}) => {
         case 'd':
         case 'disconnect':
             return <Disconnecter />;
+        case 's':
         case 'status':
             return <ConnectionStatuses onlyVpn={onlyVpn} />;
         default:
