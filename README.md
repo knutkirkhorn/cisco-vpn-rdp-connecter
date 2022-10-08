@@ -54,6 +54,7 @@ const rdpServer = 'rdp.server.name';
 #### connectToVpn(server, group, username, password)
 #### openRdpWindow(server)
 #### connectToVpnAndOpenRdp(vpnCredentials, rdpServer)
+#### isCiscoAnyConnectInstalled()
 #### isCiscoVpnConnected()
 #### isRdpWindowOpened()
 #### getAllCiscoVpnGroups(server)

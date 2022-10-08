@@ -55,6 +55,19 @@ await connectToVpnAndOpenRdp(vpnCredentials, 'rdp-server');
 export function connectToVpnAndOpenRdp(vpnCredentials: CiscoVpnCredentials, rdpServer: string): Promise<void>;
 
 /**
+Check if Cisco VPN is installed.
+
+@example
+```
+import {isCiscoAnyConnectInstalled} = require('cisco-vpn-rdp-connecter');
+
+console.log(await isCiscoAnyConnectInstalled());
+// => true
+```
+*/
+export function isCiscoAnyConnectInstalled(): Promise<boolean>;
+
+/**
 Check if Cisco VPN is connected.
 
 @example

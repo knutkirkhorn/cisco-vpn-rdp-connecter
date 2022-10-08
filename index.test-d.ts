@@ -9,6 +9,7 @@ import {
     getAllCiscoVpnGroups,
     getCiscoVpnDefaults,
     getRdpDefaults,
+    isCiscoAnyConnectInstalled,
     isCiscoVpnConnected,
     isRdpWindowOpened,
     openRdpWindow,
@@ -23,6 +24,7 @@ expectType<Promise<void>>(connectToVpnAndOpenRdp({
     username: 'knut',
     password: 'supersecret'
 }, 'example-server'));
+expectType<Promise<boolean>>(isCiscoAnyConnectInstalled());
 expectType<Promise<boolean>>(isCiscoVpnConnected());
 expectType<Promise<boolean>>(isRdpWindowOpened());
 expectType<Promise<CiscoVpnGroup[]>>(getAllCiscoVpnGroups('example-server'));

@@ -8,6 +8,7 @@ const isOnline = require('is-online');
 const {homedir} = require('node:os');
 const psList = require('ps-list');
 const sqlite3 = require('sqlite3');
+const fs = require('node:fs/promises');
 
 const ciscoVpnCliPaths = {
     win32: 'C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe',
@@ -147,6 +148,21 @@ async function isRdpWindowOpened() {
             return resolve(isRdpOpened);
         });
     });
+}
+
+async function isCiscoAnyConnectInstalled() {
+    const ciscoVpnCliPath = ciscoVpnCliPaths[process.platform];
+
+    if (!ciscoVpnCliPath) {
+        throw new Error(`Unsupported architecture \`${process.platform}\``);
+    }
+
+    try {
+        const stats = await fs.stat(ciscoVpnCliPath);
+        return stats.isFile();
+    } catch {
+        return false;
+    }
 }
 
 async function getAllCiscoVpnGroups(server) {
@@ -336,6 +352,7 @@ async function closeRdpWindow() {
 module.exports.connectToVpn = connectToVpn;
 module.exports.openRdpWindow = openRdpWindow;
 module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
+module.exports.isCiscoAnyConnectInstalled = isCiscoAnyConnectInstalled;
 module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
 module.exports.isRdpWindowOpened = isRdpWindowOpened;
 module.exports.getAllCiscoVpnGroups = getAllCiscoVpnGroups;
