@@ -19,7 +19,7 @@ const cli = meow(`
     Commands
       <none>            Connect to both VPN and RDP
       disconnect, d     Disconnect from both VPN and RDP
-      status            Show connection statuses for VPN and RDP
+      status, s         Show connection statuses for VPN and RDP
 
     Options
       --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
