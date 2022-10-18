@@ -24,6 +24,7 @@ const cli = meow(`
     Options
       --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
       --only-vpn, -o    Only connect to VPN
+      --save            Used together with --only-vpn to change the default command behavior
 `, {
     flags: {
         setup: {
@@ -33,6 +34,9 @@ const cli = meow(`
         onlyVpn: {
             type: 'boolean',
             alias: 'o'
+        },
+        save: {
+            type: 'boolean'
         }
     }
 });
@@ -40,7 +44,7 @@ const cli = meow(`
 const enabledCliFlags = Object.entries(cli.flags)
     .filter(flag => flag[1] === true)
     .map(flag => flag[0]);
-const supportedFlags = new Set(['setup', 'onlyVpn']);
+const supportedFlags = new Set(['setup', 'onlyVpn', 'save']);
 const inputHasUnsupportedFlags = enabledCliFlags.some(flag => !supportedFlags.has(flag));
 
 // Show error if input is not valid
@@ -59,5 +63,6 @@ const [command] = cli.input;
 render(React.createElement(ui, {
     command,
     setup: cli.flags.setup,
-    onlyVpn: cli.flags.onlyVpn
+    onlyVpn: cli.flags.onlyVpn,
+    saveOnlyVpn: cli.flags.save
 }));
