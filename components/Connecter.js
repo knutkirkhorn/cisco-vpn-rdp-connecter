@@ -45,20 +45,22 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
     const [loadedPreviouslyUsedCredentials, setLoadedPreviouslyUsedCredentials] = useState(false);
     const [isIncorrectLoginDetails, setIsIncorrectLoginDetails] = useState(false);
     const [isConnectedToInternet, setIsConnectedToInternet] = useState(true);
+    const [connectToOnlyVpn, setConnectToOnlyVpn] = useState(onlyVpn);
     const {exit} = useApp();
     const {setRawMode} = useStdin();
 
     useEffect(() => {
         const checkSavedCredentials = async () => {
-            const savedCredentials = config.get();
-            const {vpn: vpnCredentials} = savedCredentials;
-            const {rdp: rdpCredentials} = savedCredentials;
-
+            const savedConfig = config.get();
+            const {
+                vpn: vpnCredentials,
+                rdp: rdpCredentials
+            } = savedConfig;
             const isVpnConnected = await isCiscoVpnConnected();
 
             try {
                 const ciscoVpnDefaults = isVpnConnected ? {} : await getCiscoVpnDefaults();
-                const rdpDefaults = onlyVpn ? {} : await getRdpDefaults();
+                const rdpDefaults = connectToOnlyVpn ? {} : await getRdpDefaults();
 
                 setCredentials({
                     vpn: {
@@ -162,7 +164,7 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
                 return;
             }
 
-            if (!onlyVpn) {
+            if (!connectToOnlyVpn) {
                 const {server} = credentials.rdp;
                 await openRdpWindow(server);
                 setHasOpenedRdp(true);
@@ -174,12 +176,12 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
         checkConnectedToVpnAndOpenRdp();
     }, [credentials, isConnectedToVpn]);
 
-    const onCredentialsSet = inputCredentials => {
-        // Save credentials for both VPN and RDP
-        config.set('vpn', inputCredentials.vpn);
-        config.set('rdp', inputCredentials.rdp);
+    const onSetupCompleted = setupConfig => {
+        // Save setup config
+        config.set(setupConfig);
 
-        setCredentials(inputCredentials);
+        setCredentials(setupConfig);
+        setConnectToOnlyVpn(setupConfig.onlyVpn);
         setIsSettingUpCredentials(false);
     };
 
@@ -196,7 +198,7 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
     if (isSettingUpCredentials) {
         return (
             <SetupCredentials
-                onComplete={onCredentialsSet}
+                onComplete={onSetupCompleted}
                 defaultCredentials={credentials}
             />
         );
@@ -224,13 +226,13 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
                 <SuccessMessage message="Loaded previously used setup" />
             ) : (
                 <SetupCredentials
-                    onComplete={onCredentialsSet}
+                    onComplete={onSetupCompleted}
                     defaultCredentials={credentials}
                 />
             )}
             <ConnectToVpnMessage isCompleted={isConnectedToVpn} />
             {isConnectedToVpn && (
-                onlyVpn ? (
+                connectToOnlyVpn ? (
                     <SuccessMessage message="Skipping Remote Desktop" />
                 ) : (
                     <OpeningRdpMessage isCompleted={hasOpenedRdp} />

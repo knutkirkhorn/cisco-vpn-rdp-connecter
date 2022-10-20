@@ -25,6 +25,7 @@ $ cisco-vpn-rdp-connecter --help
     Options
       --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
       --only-vpn, -o    Only connect to VPN
+      --save            Used together with --only-vpn to change the default command behavior
 ```
 
 ## API
