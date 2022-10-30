@@ -1,4 +1,5 @@
 # cisco-vpn-rdp-connecter
+
 > Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop (RDP) window
 
 <img src="media/demo.gif" width="500">
@@ -6,12 +7,15 @@
 See [FAQ](#faq) for more details and background.
 
 ## CLI
+
 ### Install
+
 ```sh
 npm install --global cisco-vpn-rdp-connecter
 ```
 
 ### Usage
+
 ```
 $ cisco-vpn-rdp-connecter --help
     Usage
@@ -29,12 +33,15 @@ $ cisco-vpn-rdp-connecter --help
 ```
 
 ## API
+
 ### Install
+
 ```sh
 npm install cisco-vpn-rdp-connecter
 ```
 
 ### Usage
+
 ```js
 const {connectToVpnAndOpenRdp} = require('cisco-vpn-rdp-connecter');
 
@@ -52,21 +59,35 @@ const rdpServer = 'rdp.server.name';
 ```
 
 ### Exports
+
 #### connectToVpn(server, group, username, password)
+
 #### openRdpWindow(server)
+
 #### connectToVpnAndOpenRdp(vpnCredentials, rdpServer)
+
 #### isCiscoAnyConnectInstalled()
+
 #### isCiscoVpnConnected()
+
 #### isRdpWindowOpened()
+
 #### getAllCiscoVpnGroups(server)
+
 #### getCiscoVpnDefaults()
+
 #### getRdpDefaults()
+
 #### disconnectFromVpn()
+
 #### closeRdpWindow()
 
 ## FAQ
+
 ### Why this CLI?
+
 Instead of:
+
 1. open Cisco AnyConnect
 2. type in credentials and connect
 3. open Microsoft Remote Desktop
