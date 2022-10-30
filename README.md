@@ -18,18 +18,19 @@ npm install --global cisco-vpn-rdp-connecter
 
 ```
 $ cisco-vpn-rdp-connecter --help
-    Usage
-      $ cisco-vpn-rdp-connecter
 
-    Commands
-      <none>            Connect to both VPN and RDP
-      disconnect, d     Disconnect from both VPN and RDP
-      status, s         Show connection statuses for VPN and RDP
+  Usage
+    $ cisco-vpn-rdp-connecter
 
-    Options
-      --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
-      --only-vpn, -o    Only connect to VPN
-      --save            Used together with --only-vpn to change the default command behavior
+  Commands
+    <none>            Connect to both VPN and RDP
+    disconnect, d     Disconnect from both VPN and RDP
+    status, s         Show connection statuses for VPN and RDP
+
+  Options
+    --setup, -s       Setup the credentials for Cisco VPN and Microsoft RDP
+    --only-vpn, -o    Only connect to VPN
+    --save            Used together with --only-vpn to change the default command behavior
 ```
 
 ## API
