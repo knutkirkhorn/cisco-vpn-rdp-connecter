@@ -21,7 +21,8 @@
         "react"
     ],
     "rules": {
-        "indent": ["error", 4, {"SwitchCase": 1}],
+        "indent": ["error", "tab"],
+        "no-tabs": "off",
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
         "linebreak-style": "off",
@@ -31,8 +32,8 @@
         "import/extensions": ["error", "always"],
         "max-len": "off",
         "no-plusplus": "off",
-        "react/jsx-indent": ["error", 4],
-        "react/jsx-indent-props": ["error", 4],
+        "react/jsx-indent": ["error", "tab"],
+        "react/jsx-indent-props": ["error", "tab"],
         "react/jsx-filename-extension": ["error", {"extensions": [".js"]}],
         "react/function-component-definition": "off",
         "react/prop-types": "off",

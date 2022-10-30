@@ -12,58 +12,58 @@ const LoadingMessage = importJsx('./components/LoadingMessage.js');
 const config = new Conf();
 
 const App = ({
-    command, setup:
+	command, setup:
     requestedSetup,
-    onlyVpn,
-    saveOnlyVpn
+	onlyVpn,
+	saveOnlyVpn
 }) => {
-    const [hasCheckedVpnInstallation, setHasCheckedVpnInstallation] = useState(false);
-    const [foundCiscoAnyConnectInstallation, setFoundCiscoAnyConnectInstallation] = useState();
+	const [hasCheckedVpnInstallation, setHasCheckedVpnInstallation] = useState(false);
+	const [foundCiscoAnyConnectInstallation, setFoundCiscoAnyConnectInstallation] = useState();
 
-    useEffect(() => () => {
-        // eslint-disable-next-line unicorn/no-process-exit
-        process.exit(0);
-    }, []);
+	useEffect(() => () => {
+		// eslint-disable-next-line unicorn/no-process-exit
+		process.exit(0);
+	}, []);
 
-    useEffect(async () => {
-        const isVpnInstalled = await isCiscoAnyConnectInstalled();
-        setFoundCiscoAnyConnectInstallation(isVpnInstalled);
-        setHasCheckedVpnInstallation(true);
-    }, []);
+	useEffect(async () => {
+		const isVpnInstalled = await isCiscoAnyConnectInstalled();
+		setFoundCiscoAnyConnectInstallation(isVpnInstalled);
+		setHasCheckedVpnInstallation(true);
+	}, []);
 
-    if (!hasCheckedVpnInstallation) {
-        return <LoadingMessage loadingMessage="Checking for Cisco AnyConnect installation" />;
-    }
+	if (!hasCheckedVpnInstallation) {
+		return <LoadingMessage loadingMessage="Checking for Cisco AnyConnect installation" />;
+	}
 
-    if (!foundCiscoAnyConnectInstallation) {
-        return <ErrorMessage message="Could not find any Cisco AnyConnect installation" />;
-    }
+	if (!foundCiscoAnyConnectInstallation) {
+		return <ErrorMessage message="Could not find any Cisco AnyConnect installation" />;
+	}
 
-    switch (command) {
-        case undefined:
-            // Change the behavior of the default command to only connect to VPN
-            if (saveOnlyVpn && onlyVpn) {
-                config.set('onlyVpn', true);
-            }
+	switch (command) {
+	case undefined:
+		// Change the behavior of the default command to only connect to VPN
+		if (saveOnlyVpn && onlyVpn) {
+			config.set('onlyVpn', true);
+		}
 
-            // eslint-disable-next-line no-case-declarations
-            const savedOnlyVpn = config.get('onlyVpn') || false;
-            return <Connecter requestedSetup={requestedSetup} onlyVpn={onlyVpn || savedOnlyVpn} />;
-        case 'd':
-        case 'disconnect':
-            return <Disconnecter />;
-        case 's':
-        case 'status':
-            return <ConnectionStatuses onlyVpn={onlyVpn} />;
-        default:
-            return (
-                <ErrorMessage
-                    message="Invalid input"
-                    commandSuggestion="`cisco-vpn-rdp-connecter --help`"
-                    commandSuggestionSuffix="to show valid input."
-                />
-            );
-    }
+		// eslint-disable-next-line no-case-declarations
+		const savedOnlyVpn = config.get('onlyVpn') || false;
+		return <Connecter requestedSetup={requestedSetup} onlyVpn={onlyVpn || savedOnlyVpn} />;
+	case 'd':
+	case 'disconnect':
+		return <Disconnecter />;
+	case 's':
+	case 'status':
+		return <ConnectionStatuses onlyVpn={onlyVpn} />;
+	default:
+		return (
+			<ErrorMessage
+				message="Invalid input"
+				commandSuggestion="`cisco-vpn-rdp-connecter --help`"
+				commandSuggestionSuffix="to show valid input."
+			/>
+		);
+	}
 };
 
 module.exports = App;

@@ -26,43 +26,43 @@ const cli = meow(`
       --only-vpn, -o    Only connect to VPN
       --save            Used together with --only-vpn to change the default command behavior
 `, {
-    flags: {
-        setup: {
-            type: 'boolean',
-            alias: 's'
-        },
-        onlyVpn: {
-            type: 'boolean',
-            alias: 'o'
-        },
-        save: {
-            type: 'boolean'
-        }
-    }
+	flags: {
+		setup: {
+			type: 'boolean',
+			alias: 's'
+		},
+		onlyVpn: {
+			type: 'boolean',
+			alias: 'o'
+		},
+		save: {
+			type: 'boolean'
+		}
+	}
 });
 
 const enabledCliFlags = Object.entries(cli.flags)
-    .filter(flag => flag[1] === true)
-    .map(flag => flag[0]);
+	.filter(flag => flag[1] === true)
+	.map(flag => flag[0]);
 const supportedFlags = new Set(['setup', 'onlyVpn', 'save']);
 const inputHasUnsupportedFlags = enabledCliFlags.some(flag => !supportedFlags.has(flag));
 
 // Show error if input is not valid
 if (cli.input.length > 1 || inputHasUnsupportedFlags) {
-    render(React.createElement(ErrorMessage, {
-        message: 'Invalid input',
-        commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
-        commandSuggestionSuffix: 'to show valid input.'
-    }));
+	render(React.createElement(ErrorMessage, {
+		message: 'Invalid input',
+		commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
+		commandSuggestionSuffix: 'to show valid input.'
+	}));
 
-    process.exit(1);
+	process.exit(1);
 }
 
 const [command] = cli.input;
 
 render(React.createElement(ui, {
-    command,
-    setup: cli.flags.setup,
-    onlyVpn: cli.flags.onlyVpn,
-    saveOnlyVpn: cli.flags.save
+	command,
+	setup: cli.flags.setup,
+	onlyVpn: cli.flags.onlyVpn,
+	saveOnlyVpn: cli.flags.save
 }));

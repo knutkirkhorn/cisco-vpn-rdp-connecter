@@ -1,28 +1,28 @@
 import {expectType} from 'tsd';
 import {
-    CiscoVpnGroup,
-    CiscoVpnDefaults,
-    closeRdpWindow,
-    connectToVpn,
-    connectToVpnAndOpenRdp,
-    disconnectFromVpn,
-    getAllCiscoVpnGroups,
-    getCiscoVpnDefaults,
-    getRdpDefaults,
-    isCiscoAnyConnectInstalled,
-    isCiscoVpnConnected,
-    isRdpWindowOpened,
-    openRdpWindow,
-    RdpDefaults
+	CiscoVpnGroup,
+	CiscoVpnDefaults,
+	closeRdpWindow,
+	connectToVpn,
+	connectToVpnAndOpenRdp,
+	disconnectFromVpn,
+	getAllCiscoVpnGroups,
+	getCiscoVpnDefaults,
+	getRdpDefaults,
+	isCiscoAnyConnectInstalled,
+	isCiscoVpnConnected,
+	isRdpWindowOpened,
+	openRdpWindow,
+	RdpDefaults
 } from '.';
 
 expectType<Promise<void>>(connectToVpn('example-server', '1', 'knut', 'supersecret'));
 expectType<Promise<void>>(openRdpWindow('example-server'));
 expectType<Promise<void>>(connectToVpnAndOpenRdp({
-    server: 'example-server',
-    group: '1',
-    username: 'knut',
-    password: 'supersecret'
+	server: 'example-server',
+	group: '1',
+	username: 'knut',
+	password: 'supersecret'
 }, 'example-server'));
 expectType<Promise<boolean>>(isCiscoAnyConnectInstalled());
 expectType<Promise<boolean>>(isCiscoVpnConnected());

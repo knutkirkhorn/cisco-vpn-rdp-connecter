@@ -28,10 +28,10 @@ await openRdpWindow('rdp-server');
 export function openRdpWindow(server: string): Promise<void>;
 
 interface CiscoVpnCredentials {
-    server: string,
-    group: string,
-    username: string,
-    password: string
+	server: string,
+	group: string,
+	username: string,
+	password: string
 }
 
 /**
@@ -44,10 +44,10 @@ Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop window.
 import {connectToVpnAndOpenRdp} = require('cisco-vpn-rdp-connecter');
 
 const vpnCredentials = {
-    server: 'example-server',
-    group: '1',
-    username: 'knut',
-    password: 'supersecret'
+	server: 'example-server',
+	group: '1',
+	username: 'knut',
+	password: 'supersecret'
 };
 await connectToVpnAndOpenRdp(vpnCredentials, 'rdp-server');
 ```
@@ -94,8 +94,8 @@ console.log(await isRdpWindowOpened());
 export function isRdpWindowOpened(): Promise<boolean>;
 
 interface CiscoVpnGroup {
-    number: string,
-    name: string
+	number: string,
+	name: string
 }
 
 /**
@@ -107,19 +107,19 @@ import {getAllCiscoVpnGroups} = require('cisco-vpn-rdp-connecter');
 
 console.log(await getAllCiscoVpnGroups('example-server'));
 => [
-    {
-        number: '0'
-        name: 'Example group'
-    }
+	{
+		number: '0'
+		name: 'Example group'
+	}
 ]
 ```
 */
 export function getAllCiscoVpnGroups(server: string): Promise<CiscoVpnGroup[]>;
 
 interface CiscoVpnDefaults {
-    server: string,
-    group: string,
-    username: string
+	server: string,
+	group: string,
+	username: string
 }
 
 /**
@@ -131,16 +131,16 @@ import {getCiscoVpnDefaults} = require('cisco-vpn-rdp-connecter');
 
 console.log(await getCiscoVpnDefaults());
 => {
-    server: 'example-server',
-    group: '1',
-    username: 'knut'
+	server: 'example-server',
+	group: '1',
+	username: 'knut'
 }
 ```
 */
 export function getCiscoVpnDefaults(): Promise<CiscoVpnDefaults>;
 
 interface RdpDefaults {
-    server: string
+	server: string
 }
 
 /**
@@ -152,7 +152,7 @@ import {getRdpDefaults} = require('cisco-vpn-rdp-connecter');
 
 console.log(await getRdpDefaults());
 => {
-    server: 'example-server'
+	server: 'example-server'
 }
 ```
 */
