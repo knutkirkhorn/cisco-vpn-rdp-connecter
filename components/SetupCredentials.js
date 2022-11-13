@@ -124,11 +124,13 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 						defaultText={defaultCredentials.vpn.server}
 						onSubmit={onServerSet}
 					/>
-					{
-						isRetrievingVpnGroups && (
-							<LoadingMessage isCompleted={false} loadingMessage="Retrieving VPN groups for given server" loadedMessage="" />
-						)
-					}
+					{isRetrievingVpnGroups && (
+						<LoadingMessage
+							isCompleted={false}
+							loadingMessage="Retrieving VPN groups for given server"
+							loadedMessage=""
+						/>
+					)}
 				</>
 			)}
 			{step >= STEPS.GROUP && (
