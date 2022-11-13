@@ -40,7 +40,13 @@ const TextAndInputBox = ({
 				<Text>{startInputText}</Text>
 			</Box>
 			{!isCompleted ? (
-				<TextInput placeholder={defaultText} value={inputText} onChange={setInputText} onSubmit={onCompleteInput} mask={mask} />
+				<TextInput
+					placeholder={mask ? mask.repeat(defaultText.length) : defaultText}
+					value={inputText}
+					onChange={setInputText}
+					onSubmit={onCompleteInput}
+					mask={mask}
+				/>
 			) : (
 				<Text>{submittedInput}</Text>
 			)}

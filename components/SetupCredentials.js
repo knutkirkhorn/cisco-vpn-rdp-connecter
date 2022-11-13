@@ -155,6 +155,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 			{step >= STEPS.PASSWORD && (
 				<TextAndInputBox
 					text="Password"
+					defaultText={defaultCredentials.vpn.password || ''}
 					onSubmit={onPasswordSet}
 					mask="*"
 				/>
