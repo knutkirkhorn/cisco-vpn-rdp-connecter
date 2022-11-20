@@ -104,7 +104,7 @@ async function openRdpWindow(server) {
 }
 
 async function connectToVpnAndOpenRdp(vpnCredentials, rdpServer) {
-	await connectToVpn(...vpnCredentials);
+	await connectToVpn(vpnCredentials.server, vpnCredentials.group, vpnCredentials.username, vpnCredentials.password);
 	await openRdpWindow(rdpServer);
 }
 
