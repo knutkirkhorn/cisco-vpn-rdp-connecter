@@ -9,13 +9,15 @@ const Disconnecter = importJsx('./components/Disconnecter.js');
 const ConnectionStatuses = importJsx('./components/ConnectionStatuses.js');
 const ErrorMessage = importJsx('./components/ErrorMessage.js');
 const LoadingMessage = importJsx('./components/LoadingMessage.js');
+const ConfigPrinter = importJsx('./components/ConfigPrinter.js');
 const config = new Conf();
 
 const App = ({
 	command, setup:
     requestedSetup,
 	onlyVpn,
-	saveOnlyVpn
+	saveOnlyVpn,
+	showPassword
 }) => {
 	const [hasCheckedVpnInstallation, setHasCheckedVpnInstallation] = useState(false);
 	const [foundCiscoAnyConnectInstallation, setFoundCiscoAnyConnectInstallation] = useState();
@@ -55,6 +57,9 @@ const App = ({
 	case 's':
 	case 'status':
 		return <ConnectionStatuses onlyVpn={onlyVpn} />;
+	case 'p':
+	case 'print-config':
+		return <ConfigPrinter showPassword={showPassword} />;
 	default:
 		return (
 			<ErrorMessage
