@@ -21,7 +21,7 @@ const TextAndInputBox = ({
 			return;
 		}
 
-		const unmaskedInput = inputText !== '' ? inputText : defaultText;
+		const unmaskedInput = inputText === '' ? defaultText : inputText;
 		let visualInput = unmaskedInput;
 
 		// If the input uses a mask replace the text with mask in UI
@@ -39,7 +39,9 @@ const TextAndInputBox = ({
 			<Box marginRight={1}>
 				<Text>{startInputText}</Text>
 			</Box>
-			{!isCompleted ? (
+			{isCompleted ? (
+				<Text>{submittedInput}</Text>
+			) : (
 				<TextInput
 					placeholder={mask ? mask.repeat(defaultText.length) : defaultText}
 					value={inputText}
@@ -47,8 +49,6 @@ const TextAndInputBox = ({
 					onSubmit={onCompleteInput}
 					mask={mask}
 				/>
-			) : (
-				<Text>{submittedInput}</Text>
 			)}
 		</Box>
 	);

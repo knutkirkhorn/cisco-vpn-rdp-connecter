@@ -39,6 +39,7 @@
         "react/prop-types": "off",
         "strict": "off", // TODO: turn on this rule again when moving to ESM
         "unicorn/prefer-module": "off", // TODO: turn on this rule again when moving to ESM
-        "unicorn/filename-case": "off"
+        "unicorn/filename-case": "off",
+        "unicorn/switch-case-braces": "off"
     }
 }
