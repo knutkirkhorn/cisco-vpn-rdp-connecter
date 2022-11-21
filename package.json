@@ -53,7 +53,7 @@
     "ps-list": "^7.2.0",
     "react": "^17.0.2",
     "regedit": "^5.1.1",
-    "sqlite3": "^5.1.1",
+    "sqlite3": "^5.1.2",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
@@ -64,6 +64,6 @@
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-unicorn": "^45.0.0",
-    "tsd": "^0.23.0"
+    "tsd": "^0.24.1"
   }
 }
