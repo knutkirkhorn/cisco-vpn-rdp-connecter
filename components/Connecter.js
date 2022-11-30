@@ -72,7 +72,8 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
 					rdp: {
 						server: rdpDefaults.server,
 						...rdpCredentials
-					}
+					},
+					onlyVpn: savedConfig.onlyVpn
 				});
 
 				setIsCheckingSavedCredentials(false);

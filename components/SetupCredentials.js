@@ -174,7 +174,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 					<Text>Only connect to VPN: </Text>
 					<SelectInput
 						items={yesNoOptions}
-						initialIndex={0}
+						initialIndex={defaultCredentials.onlyVpn === true ? 1 : 0}
 						onSelect={handleOnlyVpnSet}
 					/>
 				</Box>
