@@ -53,17 +53,17 @@
     "ps-list": "^7.2.0",
     "react": "^17.0.2",
     "regedit": "^5.1.1",
-    "sqlite3": "^5.1.2",
+    "sqlite3": "^5.1.4",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
-    "eslint": "^8.28.0",
+    "eslint": "^8.33.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-react": "^7.31.11",
-    "eslint-plugin-unicorn": "^45.0.0",
-    "tsd": "^0.24.1"
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-unicorn": "^45.0.2",
+    "tsd": "^0.25.0"
   }
 }
