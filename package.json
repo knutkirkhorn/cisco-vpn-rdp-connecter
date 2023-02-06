@@ -1,6 +1,6 @@
 {
   "name": "cisco-vpn-rdp-connecter",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop (RDP) window",
   "main": "index.js",
   "bin": {
