@@ -1,45 +1,43 @@
 {
-    "env": {
-        "es6": true,
-        "browser": true,
-        "node": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "airbnb-base",
-        "airbnb",
+	"env": {
+		"es6": true,
+		"browser": true,
+		"node": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"airbnb-base",
+		"airbnb",
 		"plugin:unicorn/recommended"
-    ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2022
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "indent": ["error", "tab"],
-        "no-tabs": "off",
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"],
-        "linebreak-style": "off",
-        "arrow-parens": ["error", "as-needed"],
-        "object-curly-spacing": ["error", "never"],
-        "comma-dangle": ["error", "never"],
-        "import/extensions": ["error", "always"],
-        "max-len": "off",
-        "no-plusplus": "off",
-        "react/jsx-indent": ["error", "tab"],
-        "react/jsx-indent-props": ["error", "tab"],
-        "react/jsx-filename-extension": ["error", {"extensions": [".js"]}],
-        "react/function-component-definition": "off",
-        "react/prop-types": "off",
-        "strict": "off", // TODO: turn on this rule again when moving to ESM
-        "unicorn/prefer-module": "off", // TODO: turn on this rule again when moving to ESM
-        "unicorn/filename-case": "off",
-        "unicorn/switch-case-braces": "off"
-    }
+	],
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 2022
+	},
+	"plugins": ["react"],
+	"rules": {
+		"indent": ["error", "tab"],
+		"no-tabs": "off",
+		"quotes": ["error", "single"],
+		"semi": ["error", "always"],
+		"linebreak-style": "off",
+		"arrow-parens": ["error", "as-needed"],
+		"object-curly-spacing": ["error", "never"],
+		"comma-dangle": ["error", "never"],
+		"import/extensions": ["error", "always"],
+		"max-len": "off",
+		"no-plusplus": "off",
+		"react/jsx-indent": ["error", "tab"],
+		"react/jsx-indent-props": ["error", "tab"],
+		"react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
+		"react/function-component-definition": "off",
+		"react/prop-types": "off",
+		"strict": "off", // TODO: turn on this rule again when moving to ESM
+		"unicorn/prefer-module": "off", // TODO: turn on this rule again when moving to ESM
+		"unicorn/filename-case": "off",
+		"unicorn/switch-case-braces": "off"
+	}
 }
