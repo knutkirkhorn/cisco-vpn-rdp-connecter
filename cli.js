@@ -1,16 +1,11 @@
 #!/usr/bin/env node
 
-'use strict';
+import {render} from 'ink';
+import meow from 'meow';
+import React from 'react';
 
-// TODO: convert to ESM when https://github.com/vadimdemedes/import-jsx/issues/15 is fixed
-
-const importJsx = require('import-jsx');
-const {render} = require('ink');
-const meow = require('meow');
-const React = require('react');
-
-const ui = importJsx('./ui.js');
-const ErrorMessage = importJsx('./components/ErrorMessage.js');
+import ui from './ui.js';
+import ErrorMessage from './components/ErrorMessage.js';
 
 const cli = meow(`
 	Usage

@@ -1,14 +1,16 @@
-const ciscoVpn = require('cisco-vpn');
-const {spawn, exec} = require('node:child_process');
-const path = require('node:path');
-const {xml2js} = require('xml-js');
-const {readFile} = require('node:fs/promises');
-const regedit = require('regedit');
-const isOnline = require('is-online');
-const {homedir} = require('node:os');
-const psList = require('ps-list');
-const sqlite3 = require('sqlite3');
-const fs = require('node:fs/promises');
+import {readFile} from 'node:fs/promises';
+import {spawn, exec} from 'node:child_process'
+import {homedir} from 'node:os';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
+import ciscoVpn from 'cisco-vpn';
+import {xml2js} from 'xml-js';
+import regedit from 'regedit';
+import isOnline from 'is-online';
+import psList from 'ps-list';
+import sqlite3 from 'sqlite3';
+
 
 const ciscoVpnCliPaths = {
 	win32: 'C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe',
@@ -349,14 +351,16 @@ async function closeRdpWindow() {
 	});
 }
 
-module.exports.connectToVpn = connectToVpn;
-module.exports.openRdpWindow = openRdpWindow;
-module.exports.connectToVpnAndOpenRdp = connectToVpnAndOpenRdp;
-module.exports.isCiscoAnyConnectInstalled = isCiscoAnyConnectInstalled;
-module.exports.isCiscoVpnConnected = isCiscoVpnConnected;
-module.exports.isRdpWindowOpened = isRdpWindowOpened;
-module.exports.getAllCiscoVpnGroups = getAllCiscoVpnGroups;
-module.exports.getCiscoVpnDefaults = getCiscoVpnDefaults;
-module.exports.getRdpDefaults = getRdpDefaults;
-module.exports.disconnectFromVpn = disconnectFromVpn;
-module.exports.closeRdpWindow = closeRdpWindow;
+export {
+	connectToVpn,
+	openRdpWindow,
+	connectToVpnAndOpenRdp,
+	isCiscoAnyConnectInstalled,
+	isCiscoVpnConnected,
+	isRdpWindowOpened,
+	getAllCiscoVpnGroups,
+	getCiscoVpnDefaults,
+	getRdpDefaults,
+	disconnectFromVpn,
+	closeRdpWindow
+}

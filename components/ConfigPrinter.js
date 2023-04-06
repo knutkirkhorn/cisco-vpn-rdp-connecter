@@ -1,13 +1,13 @@
-const React = require('react');
-const {useState, useEffect} = require('react');
-const importJsx = require('import-jsx');
-const Conf = require('conf');
-const {Text} = require('ink');
-const logSymbols = require('log-symbols');
-const {getAllCiscoVpnGroups} = require('..');
+import React from 'react';
+import {useState, useEffect} from 'react';
+import Conf from 'conf';
+import {Text} from 'ink';
+import logSymbols from 'log-symbols';
+import {getAllCiscoVpnGroups} from '../index.js';
 
-const LoadingMessage = importJsx('./LoadingMessage.js');
-const ErrorMessage = importJsx('./ErrorMessage.js');
+import LoadingMessage from './LoadingMessage.js';
+import ErrorMessage from './ErrorMessage.js';
+
 const config = new Conf();
 
 const TextConfig = ({name, value, isMasked = false}) => {
@@ -64,4 +64,4 @@ const ConfigPrinter = ({showPassword = false}) => {
 	);
 };
 
-module.exports = ConfigPrinter;
+export default ConfigPrinter;

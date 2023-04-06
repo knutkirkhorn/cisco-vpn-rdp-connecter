@@ -1,12 +1,10 @@
-const React = require('react');
-const {Text, useApp} = require('ink');
-const {useState, useEffect} = require('react');
-const logSymbols = require('log-symbols');
-const importJsx = require('import-jsx');
-const {isCiscoVpnConnected} = require('..');
-const {isRdpWindowOpened} = require('..');
+import React from 'react';
+import {Text, useApp} from 'ink';
+import {useState, useEffect} from 'react';
+import logSymbols from 'log-symbols';
 
-const LoadingMessage = importJsx('./LoadingMessage.js');
+import {isRdpWindowOpened, isCiscoVpnConnected} from '../index.js';
+import LoadingMessage from './LoadingMessage.js';
 
 const StatusMessage = ({okStatus, type, message}) => (
 	<Text>{`${okStatus ? logSymbols.success : logSymbols.error} ${type}: ${message}`}</Text>
@@ -48,4 +46,4 @@ const ConnectionStatuses = ({onlyVpn}) => {
 	);
 };
 
-module.exports = ConnectionStatuses;
+export default ConnectionStatuses;

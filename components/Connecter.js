@@ -1,20 +1,21 @@
-const React = require('react');
-const {useState, useEffect} = require('react');
-const Conf = require('conf');
-const importJsx = require('import-jsx');
-const {useApp, useStdin} = require('ink');
-const {
+import React from 'react';
+import {useState, useEffect} from 'react';
+import Conf from 'conf';
+import {useApp, useStdin} from 'ink';
+
+import {
 	connectToVpn,
 	openRdpWindow,
 	isCiscoVpnConnected,
 	getCiscoVpnDefaults,
 	getRdpDefaults
-} = require('../index.js');
+} from '../index.js';
 
-const LoadingMessage = importJsx('./LoadingMessage.js');
-const SetupCredentials = importJsx('./SetupCredentials.js');
-const SuccessMessage = importJsx('./SuccessMessage.js');
-const ErrorMessage = importJsx('./ErrorMessage.js');
+import LoadingMessage from './LoadingMessage.js';
+import SetupCredentials from './SetupCredentials.js';
+import SuccessMessage from './SuccessMessage.js';
+import ErrorMessage from './ErrorMessage.js';
+
 const config = new Conf();
 
 const ConnectToVpnMessage = ({isCompleted}) => (
@@ -243,4 +244,4 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
 	);
 };
 
-module.exports = Connecter;
+export default Connecter;

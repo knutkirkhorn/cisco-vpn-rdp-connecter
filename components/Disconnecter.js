@@ -1,10 +1,9 @@
-const React = require('react');
-const {useState, useEffect} = require('react');
-const importJsx = require('import-jsx');
-const {useApp} = require('ink');
-const {disconnectFromVpn, closeRdpWindow} = require('../index.js');
+import React from 'react';
+import {useState, useEffect} from 'react';
+import {useApp} from 'ink';
+import {disconnectFromVpn, closeRdpWindow} from '../index.js';
 
-const LoadingMessage = importJsx('./LoadingMessage.js');
+import LoadingMessage from './LoadingMessage.js';
 
 const STEPS = {
 	RDP: 0,
@@ -52,4 +51,4 @@ const Disconnecter = () => {
 	);
 };
 
-module.exports = Disconnecter;
+export default Disconnecter;

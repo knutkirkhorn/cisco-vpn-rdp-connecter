@@ -1,6 +1,6 @@
-const React = require('react');
-const {Text, Box} = require('ink');
-const logSymbols = require('log-symbols');
+import React from 'react';
+import {Text, Box} from 'ink';
+import logSymbols from 'log-symbols';
 
 const ErrorMessage = ({message, commandSuggestion, commandSuggestionSuffix}) => (
 	<Box flexDirection="column">
@@ -19,4 +19,4 @@ const ErrorMessage = ({message, commandSuggestion, commandSuggestionSuffix}) => 
 	</Box>
 );
 
-module.exports = ErrorMessage;
+export default ErrorMessage;

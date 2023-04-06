@@ -1,15 +1,15 @@
-const React = require('react');
-const importJsx = require('import-jsx');
-const {useEffect, useState} = require('react');
-const Conf = require('conf');
-const {isCiscoAnyConnectInstalled} = require('./index.js');
+import React from 'react';
+import {useEffect, useState} from 'react';
+import Conf from 'conf';
+import {isCiscoAnyConnectInstalled} from './index.js';
 
-const Connecter = importJsx('./components/Connecter.js');
-const Disconnecter = importJsx('./components/Disconnecter.js');
-const ConnectionStatuses = importJsx('./components/ConnectionStatuses.js');
-const ErrorMessage = importJsx('./components/ErrorMessage.js');
-const LoadingMessage = importJsx('./components/LoadingMessage.js');
-const ConfigPrinter = importJsx('./components/ConfigPrinter.js');
+import Connecter from './components/Connecter.js';
+import Disconnecter from './components/Disconnecter.js';
+import ConnectionStatuses from './components/ConnectionStatuses.js';
+import ErrorMessage from './components/ErrorMessage.js';
+import LoadingMessage from './components/LoadingMessage.js';
+import ConfigPrinter from './components/ConfigPrinter.js';
+
 const config = new Conf();
 
 const App = ({
@@ -71,4 +71,4 @@ const App = ({
 	}
 };
 
-module.exports = App;
+export default App;
