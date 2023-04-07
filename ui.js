@@ -25,10 +25,13 @@ const App = ({
 		process.exit(0);
 	}, []);
 
-	useEffect(async () => {
-		const isVpnInstalled = await isCiscoAnyConnectInstalled();
-		setFoundCiscoAnyConnectInstallation(isVpnInstalled);
-		setHasCheckedVpnInstallation(true);
+	useEffect(() => {
+		async function checkVpnInstallation() {
+			const isVpnInstalled = await isCiscoAnyConnectInstalled();
+			setFoundCiscoAnyConnectInstallation(isVpnInstalled);
+			setHasCheckedVpnInstallation(true);
+		}
+		checkVpnInstallation();
 	}, []);
 
 	if (!hasCheckedVpnInstallation) {
