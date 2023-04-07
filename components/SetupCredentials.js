@@ -1,6 +1,5 @@
 import {Text, Box, useStdin} from 'ink';
-import {useState, useEffect} from 'react';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import SelectInput from 'ink-select-input';
 import {getAllCiscoVpnGroups} from '../index.js';
 

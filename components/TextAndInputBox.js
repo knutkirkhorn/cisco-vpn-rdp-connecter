@@ -1,7 +1,6 @@
 import {Box, Text} from 'ink';
 import TextInput from 'ink-text-input';
-import {useState} from 'react';
-import React from 'react';
+import React, {useState} from 'react';
 
 const TextAndInputBox = ({
 	text,

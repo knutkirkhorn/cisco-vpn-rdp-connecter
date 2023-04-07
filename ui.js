@@ -1,5 +1,4 @@
-import React from 'react';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Conf from 'conf';
 import {isCiscoAnyConnectInstalled} from './index.js';
 

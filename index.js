@@ -1,7 +1,6 @@
-import {readFile} from 'node:fs/promises';
-import {spawn, exec} from 'node:child_process'
+import fs, {readFile} from 'node:fs/promises';
+import {spawn, exec} from 'node:child_process';
 import {homedir} from 'node:os';
-import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import ciscoVpn from 'cisco-vpn';
@@ -10,7 +9,6 @@ import regedit from 'regedit';
 import isOnline from 'is-online';
 import psList from 'ps-list';
 import sqlite3 from 'sqlite3';
-
 
 const ciscoVpnCliPaths = {
 	win32: 'C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe',
@@ -363,4 +361,4 @@ export {
 	getRdpDefaults,
 	disconnectFromVpn,
 	closeRdpWindow
-}
+};

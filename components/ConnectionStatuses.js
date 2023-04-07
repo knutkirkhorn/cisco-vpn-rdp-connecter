@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, useApp} from 'ink';
-import {useState, useEffect} from 'react';
 import logSymbols from 'log-symbols';
 
 import {isRdpWindowOpened, isCiscoVpnConnected} from '../index.js';
