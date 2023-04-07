@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useApp} from 'ink';
 import {disconnectFromVpn, closeRdpWindow} from '../index.js';
-
 import LoadingMessage from './LoadingMessage.js';
 
 const STEPS = {

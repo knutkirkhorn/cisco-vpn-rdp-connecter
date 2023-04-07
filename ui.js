@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Conf from 'conf';
 import {isCiscoAnyConnectInstalled} from './index.js';
-
 import Connecter from './components/Connecter.js';
 import Disconnecter from './components/Disconnecter.js';
 import ConnectionStatuses from './components/ConnectionStatuses.js';

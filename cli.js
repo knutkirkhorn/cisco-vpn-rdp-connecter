@@ -3,7 +3,6 @@
 import {render} from 'ink';
 import meow from 'meow';
 import React from 'react';
-
 import ui from './ui.js';
 import ErrorMessage from './components/ErrorMessage.js';
 

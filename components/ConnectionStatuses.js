@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Text, useApp} from 'ink';
 import logSymbols from 'log-symbols';
-
 import {isRdpWindowOpened, isCiscoVpnConnected} from '../index.js';
 import LoadingMessage from './LoadingMessage.js';
 

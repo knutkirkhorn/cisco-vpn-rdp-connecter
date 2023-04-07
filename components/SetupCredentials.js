@@ -2,7 +2,6 @@ import {Text, Box, useStdin} from 'ink';
 import React, {useState, useEffect} from 'react';
 import SelectInput from 'ink-select-input';
 import {getAllCiscoVpnGroups} from '../index.js';
-
 import SuccessMessage from './SuccessMessage.js';
 import TextAndInputBox from './TextAndInputBox.js';
 import LoadingMessage from './LoadingMessage.js';

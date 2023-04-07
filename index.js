@@ -2,7 +2,6 @@ import fs, {readFile} from 'node:fs/promises';
 import {spawn, exec} from 'node:child_process';
 import {homedir} from 'node:os';
 import path from 'node:path';
-
 import ciscoVpn from 'cisco-vpn';
 import {xml2js} from 'xml-js';
 import regedit from 'regedit';

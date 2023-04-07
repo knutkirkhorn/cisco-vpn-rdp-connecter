@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import Conf from 'conf';
 import {useApp, useStdin} from 'ink';
-
 import {
 	connectToVpn,
 	openRdpWindow,
@@ -9,7 +8,6 @@ import {
 	getCiscoVpnDefaults,
 	getRdpDefaults
 } from '../index.js';
-
 import LoadingMessage from './LoadingMessage.js';
 import SetupCredentials from './SetupCredentials.js';
 import SuccessMessage from './SuccessMessage.js';

@@ -3,7 +3,6 @@ import Conf from 'conf';
 import {Text} from 'ink';
 import logSymbols from 'log-symbols';
 import {getAllCiscoVpnGroups} from '../index.js';
-
 import LoadingMessage from './LoadingMessage.js';
 import ErrorMessage from './ErrorMessage.js';
 
