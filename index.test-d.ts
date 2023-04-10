@@ -14,7 +14,7 @@ import {
 	isRdpWindowOpened,
 	openRdpWindow,
 	RdpDefaults
-} from '.';
+} from './index.js';
 
 expectType<Promise<void>>(connectToVpn('example-server', '1', 'knut', 'supersecret'));
 expectType<Promise<void>>(openRdpWindow('example-server'));

@@ -7,7 +7,7 @@ Connect to Cisco AnyConnect VPN.
 
 @example
 ```
-import {connectToVpn} = require('cisco-vpn-rdp-connecter');
+import {connectToVpn} from 'cisco-vpn-rdp-connecter';
 
 await connectToVpn('example-server', '1', 'knut', 'supersecret');
 ```
@@ -20,7 +20,7 @@ Open a Microsoft Remote Desktop window.
 
 @example
 ```
-import {openRdpWindow} = require('cisco-vpn-rdp-connecter');
+import {openRdpWindow} from 'cisco-vpn-rdp-connecter';
 
 await openRdpWindow('rdp-server');
 ```
@@ -41,7 +41,7 @@ Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop window.
 
 @example
 ```
-import {connectToVpnAndOpenRdp} = require('cisco-vpn-rdp-connecter');
+import {connectToVpnAndOpenRdp} from 'cisco-vpn-rdp-connecter';
 
 const vpnCredentials = {
 	server: 'example-server',
@@ -59,7 +59,7 @@ Check if Cisco VPN is installed.
 
 @example
 ```
-import {isCiscoAnyConnectInstalled} = require('cisco-vpn-rdp-connecter');
+import {isCiscoAnyConnectInstalled} from 'cisco-vpn-rdp-connecter';
 
 console.log(await isCiscoAnyConnectInstalled());
 // => true
@@ -72,7 +72,7 @@ Check if Cisco VPN is connected.
 
 @example
 ```
-import {isCiscoVpnConnected} = require('cisco-vpn-rdp-connecter');
+import {isCiscoVpnConnected} from 'cisco-vpn-rdp-connecter';
 
 console.log(await isCiscoVpnConnected());
 // => true
@@ -85,7 +85,7 @@ Check if a Microsoft Remote Desktop window is open.
 
 @example
 ```
-import {isRdpWindowOpened} = require('cisco-vpn-rdp-connecter');
+import {isRdpWindowOpened} from 'cisco-vpn-rdp-connecter';
 
 console.log(await isRdpWindowOpened());
 // => true
@@ -103,15 +103,15 @@ Get all Cisco VPN groups for a given server.
 
 @example
 ```
-import {getAllCiscoVpnGroups} = require('cisco-vpn-rdp-connecter');
+import {getAllCiscoVpnGroups} from 'cisco-vpn-rdp-connecter';
 
 console.log(await getAllCiscoVpnGroups('example-server'));
-=> [
-	{
-		number: '0'
-		name: 'Example group'
-	}
-]
+// => [
+// 	{
+// 		number: '0'
+// 		name: 'Example group'
+// 	}
+// ]
 ```
 */
 export function getAllCiscoVpnGroups(server: string): Promise<CiscoVpnGroup[]>;
@@ -127,14 +127,14 @@ Get the default/recent used Cisco VPN settings.
 
 @example
 ```
-import {getCiscoVpnDefaults} = require('cisco-vpn-rdp-connecter');
+import {getCiscoVpnDefaults} from 'cisco-vpn-rdp-connecter';
 
 console.log(await getCiscoVpnDefaults());
-=> {
-	server: 'example-server',
-	group: '1',
-	username: 'knut'
-}
+// => {
+// 	server: 'example-server',
+// 	group: '1',
+// 	username: 'knut'
+// }
 ```
 */
 export function getCiscoVpnDefaults(): Promise<CiscoVpnDefaults>;
@@ -148,12 +148,12 @@ Get the default/recent used RDP settings for Microsoft Remote Desktop.
 
 @example
 ```
-import {getRdpDefaults} = require('cisco-vpn-rdp-connecter');
+import {getRdpDefaults} from 'cisco-vpn-rdp-connecter';
 
 console.log(await getRdpDefaults());
-=> {
-	server: 'example-server'
-}
+// => {
+// 	server: 'example-server'
+// }
 ```
 */
 export function getRdpDefaults(): Promise<RdpDefaults>;
@@ -163,7 +163,7 @@ Disconnect from Cisco AnyConnect VPN.
 
 @example
 ```
-import {disconnectFromVpn} = require('cisco-vpn-rdp-connecter');
+import {disconnectFromVpn} from 'cisco-vpn-rdp-connecter';
 
 await disconnectFromVpn();
 ```
@@ -175,7 +175,7 @@ Close the Microsoft Remote Desktop window.
 
 @example
 ```
-import {closeRdpWindow} = require('cisco-vpn-rdp-connecter');
+import {closeRdpWindow} from 'cisco-vpn-rdp-connecter';
 
 await closeRdpWindow();
 ```
