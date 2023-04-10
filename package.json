@@ -2,18 +2,18 @@
 	"name": "cisco-vpn-rdp-connecter",
 	"version": "2.4.2",
 	"description": "Connect to Cisco AnyConnect VPN and open a Microsoft Remote Desktop (RDP) window",
-	"main": "index.js",
+	"type": "module",
 	"bin": {
-		"cisco-vpn-rdp-connecter": "cli.js"
+		"cisco-vpn-rdp-connecter": "dist/cli.js"
 	},
 	"files": [
-		"cli.js",
-		"index.js",
-		"index.d.ts",
-		"ui.js",
-		"components"
+		"dist",
+		"index.d.ts"
 	],
 	"scripts": {
+		"build": "babel . --out-dir=dist --ignore node_modules,dist",
+		"dev": "babel . --out-dir dist --watch --ignore node_modules,dist",
+		"prepublish": "npm run build",
 		"test": "tsd",
 		"lint": "eslint ."
 	},
@@ -30,6 +30,8 @@
 		"cli-app"
 	],
 	"author": "Knut Kirkhorn",
+	"exports": "./dist/index.js",
+	"types": "./index.d.ts",
 	"engines": {
 		"node": ">=14.16"
 	},
@@ -41,22 +43,24 @@
 	"dependencies": {
 		"cisco-vpn": "^1.0.2",
 		"conf": "^10.2.0",
-		"import-jsx": "^4.0.1",
-		"ink": "^3.2.0",
-		"ink-select-input": "^4.2.1",
-		"ink-spinner": "^4.0.3",
-		"ink-text-input": "^4.0.3",
+		"import-jsx": "^5.0.0",
+		"ink": "^4.1.0",
+		"ink-select-input": "^5.0.0",
+		"ink-spinner": "^5.0.0",
+		"ink-text-input": "^5.0.1",
 		"is-online": "^9.0.1",
 		"is-unicode-supported": "^0.1.0",
 		"log-symbols": "^4.1.0",
 		"meow": "^9.0.0",
 		"ps-list": "^7.2.0",
-		"react": "^17.0.2",
+		"react": "^18.2.0",
 		"regedit": "^5.1.1",
 		"sqlite3": "^5.1.4",
 		"xml-js": "^1.6.11"
 	},
 	"devDependencies": {
+		"@babel/cli": "^7.21.0",
+		"@babel/preset-react": "^7.18.6",
 		"eslint": "^8.33.0",
 		"eslint-config-airbnb": "^19.0.4",
 		"eslint-config-airbnb-base": "^15.0.0",
@@ -65,5 +69,10 @@
 		"eslint-plugin-react": "^7.32.2",
 		"eslint-plugin-unicorn": "^45.0.2",
 		"tsd": "^0.25.0"
+	},
+	"babel": {
+		"presets": [
+			"@babel/preset-react"
+		]
 	}
 }

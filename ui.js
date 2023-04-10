@@ -1,15 +1,13 @@
-const React = require('react');
-const importJsx = require('import-jsx');
-const {useEffect, useState} = require('react');
-const Conf = require('conf');
-const {isCiscoAnyConnectInstalled} = require('./index.js');
+import React, {useEffect, useState} from 'react';
+import Conf from 'conf';
+import {isCiscoAnyConnectInstalled} from './index.js';
+import Connecter from './components/Connecter.js';
+import Disconnecter from './components/Disconnecter.js';
+import ConnectionStatuses from './components/ConnectionStatuses.js';
+import ErrorMessage from './components/ErrorMessage.js';
+import LoadingMessage from './components/LoadingMessage.js';
+import ConfigPrinter from './components/ConfigPrinter.js';
 
-const Connecter = importJsx('./components/Connecter.js');
-const Disconnecter = importJsx('./components/Disconnecter.js');
-const ConnectionStatuses = importJsx('./components/ConnectionStatuses.js');
-const ErrorMessage = importJsx('./components/ErrorMessage.js');
-const LoadingMessage = importJsx('./components/LoadingMessage.js');
-const ConfigPrinter = importJsx('./components/ConfigPrinter.js');
 const config = new Conf();
 
 const App = ({
@@ -27,10 +25,13 @@ const App = ({
 		process.exit(0);
 	}, []);
 
-	useEffect(async () => {
-		const isVpnInstalled = await isCiscoAnyConnectInstalled();
-		setFoundCiscoAnyConnectInstallation(isVpnInstalled);
-		setHasCheckedVpnInstallation(true);
+	useEffect(() => {
+		async function checkVpnInstallation() {
+			const isVpnInstalled = await isCiscoAnyConnectInstalled();
+			setFoundCiscoAnyConnectInstallation(isVpnInstalled);
+			setHasCheckedVpnInstallation(true);
+		}
+		checkVpnInstallation();
 	}, []);
 
 	if (!hasCheckedVpnInstallation) {
@@ -71,4 +72,4 @@ const App = ({
 	}
 };
 
-module.exports = App;
+export default App;

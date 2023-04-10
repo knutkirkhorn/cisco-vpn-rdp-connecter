@@ -1,9 +1,9 @@
-const React = require('react');
-const {Text} = require('ink');
-const logSymbols = require('log-symbols');
+import React from 'react';
+import {Text} from 'ink';
+import logSymbols from 'log-symbols';
 
 const SuccessMessage = ({message}) => (
 	<Text>{`${logSymbols.success} ${message}`}</Text>
 );
 
-module.exports = SuccessMessage;
+export default SuccessMessage;

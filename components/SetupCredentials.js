@@ -1,13 +1,10 @@
-const importJsx = require('import-jsx');
-const {Text, Box, useStdin} = require('ink');
-const {useState, useEffect} = require('react');
-const React = require('react');
-const SelectInput = require('ink-select-input').default;
-const {getAllCiscoVpnGroups} = require('..');
-
-const SuccessMessage = importJsx('./SuccessMessage.js');
-const TextAndInputBox = importJsx('./TextAndInputBox.js');
-const LoadingMessage = importJsx('./LoadingMessage.js');
+import {Text, Box, useStdin} from 'ink';
+import React, {useState, useEffect} from 'react';
+import SelectInput from 'ink-select-input';
+import {getAllCiscoVpnGroups} from '../index.js';
+import SuccessMessage from './SuccessMessage.js';
+import TextAndInputBox from './TextAndInputBox.js';
+import LoadingMessage from './LoadingMessage.js';
 
 const STEPS = {
 	VPN_SERVER: 0,
@@ -183,4 +180,4 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 	);
 };
 
-module.exports = SetupCredentials;
+export default SetupCredentials;

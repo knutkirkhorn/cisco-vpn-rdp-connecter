@@ -1,8 +1,8 @@
-const React = require('react');
-const {Text} = require('ink');
-const logSymbols = require('log-symbols');
-const isUnicodeSupported = require('is-unicode-supported');
-const Spinner = require('ink-spinner').default;
+import React from 'react';
+import {Text} from 'ink';
+import logSymbols from 'log-symbols';
+import isUnicodeSupported from 'is-unicode-supported';
+import Spinner from 'ink-spinner';
 
 const LoadingMessage = ({isCompleted, loadingMessage, loadedMessage}) => (
 	<Text>
@@ -24,4 +24,4 @@ const LoadingMessage = ({isCompleted, loadingMessage, loadedMessage}) => (
 	</Text>
 );
 
-module.exports = LoadingMessage;
+export default LoadingMessage;

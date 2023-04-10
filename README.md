@@ -46,7 +46,7 @@ npm install cisco-vpn-rdp-connecter
 ### Usage
 
 ```js
-const {connectToVpnAndOpenRdp} = require('cisco-vpn-rdp-connecter');
+import {connectToVpnAndOpenRdp} from 'cisco-vpn-rdp-connecter';
 
 const vpnCredentials = {
     server: 'server.name',
@@ -56,9 +56,7 @@ const vpnCredentials = {
 };
 const rdpServer = 'rdp.server.name';
 
-(async () => {
-    await connectToVpnAndOpenRdp(vpnCredentials, rdpServer);
-})();
+await connectToVpnAndOpenRdp(vpnCredentials, rdpServer);
 ```
 
 ### Exports

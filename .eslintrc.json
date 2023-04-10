@@ -35,9 +35,8 @@
 		"react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
 		"react/function-component-definition": "off",
 		"react/prop-types": "off",
-		"strict": "off", // TODO: turn on this rule again when moving to ESM
-		"unicorn/prefer-module": "off", // TODO: turn on this rule again when moving to ESM
 		"unicorn/filename-case": "off",
-		"unicorn/switch-case-braces": "off"
+		"unicorn/switch-case-braces": "off",
+		"import/no-unresolved": "off"
 	}
 }

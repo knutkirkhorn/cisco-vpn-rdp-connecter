@@ -1,7 +1,6 @@
-const {Box, Text} = require('ink');
-const TextInput = require('ink-text-input').default;
-const {useState} = require('react');
-const React = require('react');
+import {Box, Text} from 'ink';
+import TextInput from 'ink-text-input';
+import React, {useState} from 'react';
 
 const TextAndInputBox = ({
 	text,
@@ -54,4 +53,4 @@ const TextAndInputBox = ({
 	);
 };
 
-module.exports = TextAndInputBox;
+export default TextAndInputBox;
