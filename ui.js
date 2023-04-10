@@ -8,7 +8,7 @@ import ErrorMessage from './components/ErrorMessage.js';
 import LoadingMessage from './components/LoadingMessage.js';
 import ConfigPrinter from './components/ConfigPrinter.js';
 
-const config = new Conf();
+const config = new Conf({projectName: 'cisco-vpn-rdp-connecter'});
 
 const App = ({
 	command, setup:

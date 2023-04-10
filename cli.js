@@ -37,7 +37,8 @@ const cli = meow(`
 		showPassword: {
 			type: 'boolean'
 		}
-	}
+	},
+	importMeta: import.meta
 });
 
 const enabledCliFlags = Object.entries(cli.flags)

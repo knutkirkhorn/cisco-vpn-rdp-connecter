@@ -13,7 +13,7 @@ import SetupCredentials from './SetupCredentials.js';
 import SuccessMessage from './SuccessMessage.js';
 import ErrorMessage from './ErrorMessage.js';
 
-const config = new Conf();
+const config = new Conf({projectName: 'cisco-vpn-rdp-connecter'});
 
 const ConnectToVpnMessage = ({isCompleted}) => (
 	<LoadingMessage

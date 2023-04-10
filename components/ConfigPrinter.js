@@ -6,7 +6,7 @@ import {getAllCiscoVpnGroups} from '../index.js';
 import LoadingMessage from './LoadingMessage.js';
 import ErrorMessage from './ErrorMessage.js';
 
-const config = new Conf();
+const config = new Conf({projectName: 'cisco-vpn-rdp-connecter'});
 
 const TextConfig = ({name, value, isMasked = false}) => {
 	const textValue = isMasked ? '*'.repeat(value.length) : value;
