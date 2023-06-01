@@ -1,18 +1,29 @@
 import React, {useState, useEffect} from 'react';
 import {Text, useApp} from 'ink';
 import logSymbols from 'log-symbols';
+import Conf from 'conf';
 import {isRdpWindowOpened, isCiscoVpnConnected} from '../index.js';
 import LoadingMessage from './LoadingMessage.js';
+import {Config, schema} from '../config.js';
+
+const config = new Conf<Config>({projectName: 'cisco-vpn-rdp-connecter', schema});
 
 type StatusMessageProperties = {
 	okStatus: boolean;
 	type: string;
 	message: string;
+	// eslint-disable-next-line react/require-default-props
+	extra?: string;
 };
 
-function StatusMessage({okStatus, type, message}: StatusMessageProperties) {
+function StatusMessage({
+	okStatus, type, message, extra
+}: StatusMessageProperties) {
 	return (
-		<Text>{`${okStatus ? logSymbols.success : logSymbols.error} ${type}: ${message}`}</Text>
+		<Text>
+			{`${okStatus ? logSymbols.success : logSymbols.error} ${type}: ${message}`}
+			{`${extra ? ` (${extra})` : ''}`}
+		</Text>
 	);
 }
 
@@ -24,12 +35,16 @@ export default function ConnectionStatuses({onlyVpn}: Properties) {
 	const [isVpnConnected, setIsVpnConnected] = useState(false);
 	const [isRdpOpened, setIsRdpOpened] = useState(false);
 	const [hasCheckedStatuses, setHasCheckedStatuses] = useState(false);
+	const [vpnGroupName, setVpnGroupName] = useState('');
 	const {exit} = useApp();
 
 	useEffect(() => {
 		const checkStatuses = async () => {
 			const vpnConnected = await isCiscoVpnConnected();
 			setIsVpnConnected(vpnConnected);
+
+			const vpnConfig = config.get('vpn');
+			setVpnGroupName(vpnConfig.groupName);
 
 			const rdpOpened = await isRdpWindowOpened();
 			setIsRdpOpened(rdpOpened);
@@ -46,7 +61,12 @@ export default function ConnectionStatuses({onlyVpn}: Properties) {
 
 	return (
 		<>
-			<StatusMessage okStatus={isVpnConnected} type="VPN" message={isVpnConnected ? 'connected' : 'disconnected'} />
+			<StatusMessage
+				okStatus={isVpnConnected}
+				type="VPN"
+				message={isVpnConnected ? 'connected' : 'disconnected'}
+				extra={isVpnConnected ? vpnGroupName : ''}
+			/>
 			{onlyVpn ? (
 				<Text>- RDP: skipped check</Text>
 			) : (
