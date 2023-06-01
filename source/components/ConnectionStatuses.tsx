@@ -4,11 +4,23 @@ import logSymbols from 'log-symbols';
 import {isRdpWindowOpened, isCiscoVpnConnected} from '../index.js';
 import LoadingMessage from './LoadingMessage.js';
 
-const StatusMessage = ({okStatus, type, message}) => (
-	<Text>{`${okStatus ? logSymbols.success : logSymbols.error} ${type}: ${message}`}</Text>
-);
+type StatusMessageProperties = {
+	okStatus: boolean;
+	type: string;
+	message: string;
+};
 
-const ConnectionStatuses = ({onlyVpn}) => {
+function StatusMessage({okStatus, type, message}: StatusMessageProperties) {
+	return (
+		<Text>{`${okStatus ? logSymbols.success : logSymbols.error} ${type}: ${message}`}</Text>
+	);
+}
+
+type Properties = {
+	onlyVpn: boolean;
+};
+
+export default function ConnectionStatuses({onlyVpn}: Properties) {
 	const [isVpnConnected, setIsVpnConnected] = useState(false);
 	const [isRdpOpened, setIsRdpOpened] = useState(false);
 	const [hasCheckedStatuses, setHasCheckedStatuses] = useState(false);
@@ -42,6 +54,4 @@ const ConnectionStatuses = ({onlyVpn}) => {
 			)}
 		</>
 	);
-};
-
-export default ConnectionStatuses;
+}

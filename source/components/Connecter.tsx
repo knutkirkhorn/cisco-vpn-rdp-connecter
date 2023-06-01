@@ -12,31 +12,57 @@ import LoadingMessage from './LoadingMessage.js';
 import SetupCredentials from './SetupCredentials.js';
 import SuccessMessage from './SuccessMessage.js';
 import ErrorMessage from './ErrorMessage.js';
+import {Config, schema} from '../config.js';
 
-const config = new Conf({projectName: 'cisco-vpn-rdp-connecter'});
+const config = new Conf<Config>({projectName: 'cisco-vpn-rdp-connecter', schema});
 
-const ConnectToVpnMessage = ({isCompleted}) => (
-	<LoadingMessage
-		isCompleted={isCompleted}
-		loadingMessage="Connecting to VPN"
-		loadedMessage="Connected to VPN"
-	/>
-);
+type ConnectToVpnMessageProperties = {
+	isCompleted: boolean;
+};
 
-const OpeningRdpMessage = ({isCompleted}) => (
-	<LoadingMessage
-		isCompleted={isCompleted}
-		loadingMessage="Opening Remote Desktop"
-		loadedMessage="Opened Remote Desktop"
-	/>
-);
+function ConnectToVpnMessage({isCompleted}: ConnectToVpnMessageProperties) {
+	return (
+		<LoadingMessage
+			isCompleted={isCompleted}
+			loadingMessage="Connecting to VPN"
+			loadedMessage="Connected to VPN"
+		/>
+	);
+}
 
-const Connecter = ({requestedSetup, onlyVpn}) => {
+type OpeningRdpMessageProperties = {
+	isCompleted: boolean;
+};
+
+function OpeningRdpMessage({isCompleted}: OpeningRdpMessageProperties) {
+	return (
+		<LoadingMessage
+			isCompleted={isCompleted}
+			loadingMessage="Opening Remote Desktop"
+			loadedMessage="Opened Remote Desktop"
+		/>
+	);
+}
+
+type ConnecterProperties = {
+	requestedSetup: boolean;
+	onlyVpn: boolean;
+};
+
+export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties) {
 	const [isConnectedToVpn, setIsConnectedToVpn] = useState(false);
 	const [hasOpenedRdp, setHasOpenedRdp] = useState(false);
 	const [credentials, setCredentials] = useState({
-		vpn: {},
-		rdp: {}
+		vpn: {
+			server: '',
+			group: '',
+			username: '',
+			password: ''
+		},
+		rdp: {
+			server: ''
+		},
+		onlyVpn: false
 	});
 	const [isCheckingSavedCredentials, setIsCheckingSavedCredentials] = useState(true);
 	const [isSettingUpCredentials, setIsSettingUpCredentials] = useState(true);
@@ -49,29 +75,33 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
 
 	useEffect(() => {
 		const checkSavedCredentials = async () => {
-			const savedConfig = config.get();
-			const {
-				vpn: vpnCredentials,
-				rdp: rdpCredentials
-			} = savedConfig;
+			const vpnCredentials = config.get('vpn');
+			const rdpCredentials = config.get('rdp');
+			const savedOnlyVpn = config.get('onlyVpn');
 			const isVpnConnected = await isCiscoVpnConnected();
 
 			try {
-				const ciscoVpnDefaults = isVpnConnected ? {} : await getCiscoVpnDefaults();
-				const rdpDefaults = connectToOnlyVpn ? {} : await getRdpDefaults();
+				const ciscoVpnDefaults = isVpnConnected ? {
+					server: '',
+					group: '',
+					username: ''
+				} : await getCiscoVpnDefaults();
+				const rdpDefaults = connectToOnlyVpn ? {
+					server: ''
+				} : await getRdpDefaults();
 
 				setCredentials({
 					vpn: {
+						...vpnCredentials,
 						server: ciscoVpnDefaults.server,
 						group: ciscoVpnDefaults.group,
-						username: ciscoVpnDefaults.username,
-						...vpnCredentials
+						username: ciscoVpnDefaults.username
 					},
 					rdp: {
-						server: rdpDefaults.server,
-						...rdpCredentials
+						...rdpCredentials,
+						server: rdpDefaults.server
 					},
-					onlyVpn: savedConfig.onlyVpn
+					onlyVpn: savedOnlyVpn
 				});
 
 				setIsCheckingSavedCredentials(false);
@@ -95,7 +125,7 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
 					setLoadedPreviouslyUsedCredentials(true);
 				}
 			} catch (error) {
-				if (error.message === 'No internet connection') {
+				if (error instanceof Error && error.message === 'No internet connection') {
 					setIsConnectedToInternet(false);
 				}
 
@@ -135,20 +165,22 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
 				await connectToVpn(server, group, username, password);
 				setIsConnectedToVpn(true);
 			} catch (error) {
-				if (error.message === 'Incorrect login details') {
-					setIsIncorrectLoginDetails(true);
-					exit();
-					return;
-				}
+				if (error instanceof Error) {
+					if (error.message === 'Incorrect login details') {
+						setIsIncorrectLoginDetails(true);
+						exit();
+						return;
+					}
 
-				if (error.message === 'No internet connection') {
-					setIsConnectedToInternet(false);
-					exit();
-					return;
-				}
+					if (error.message === 'No internet connection') {
+						setIsConnectedToInternet(false);
+						exit();
+						return;
+					}
 
-				if (error.message !== 'Already connected to VPN!') {
-					throw error;
+					if (error.message !== 'Already connected to VPN!') {
+						throw error;
+					}
 				}
 
 				setIsConnectedToVpn(true);
@@ -175,7 +207,7 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
 		checkConnectedToVpnAndOpenRdp();
 	}, [credentials, isConnectedToVpn]);
 
-	const onSetupCompleted = setupConfig => {
+	const onSetupCompleted = (setupConfig: Config) => {
 		// Save setup config
 		config.set(setupConfig);
 
@@ -239,6 +271,4 @@ const Connecter = ({requestedSetup, onlyVpn}) => {
 			)}
 		</>
 	);
-};
-
-export default Connecter;
+}

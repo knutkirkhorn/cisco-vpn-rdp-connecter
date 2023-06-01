@@ -5,6 +5,7 @@ import {getAllCiscoVpnGroups} from '../index.js';
 import SuccessMessage from './SuccessMessage.js';
 import TextAndInputBox from './TextAndInputBox.js';
 import LoadingMessage from './LoadingMessage.js';
+import {Config} from '../config.js';
 
 const STEPS = {
 	VPN_SERVER: 0,
@@ -25,15 +26,26 @@ const yesNoOptions = [
 	}
 ];
 
-const SetupCredentials = ({onComplete, defaultCredentials}) => {
+type Properties = {
+	onComplete: (setupConfig: Config) => void;
+	// eslint-disable-next-line react/require-default-props
+	defaultCredentials?: Config;
+};
+
+type SelectInputItem = {
+	label: string;
+	value: string;
+};
+
+export default function SetupCredentials({onComplete, defaultCredentials}: Properties) {
 	const [vpnServer, setVpnServer] = useState('');
-	const [group, setGroup] = useState();
+	const [group, setGroup] = useState<SelectInputItem>({label: '', value: ''});
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [rdpServer, setRdpServer] = useState('');
-	const [onlyVpn, setOnlyVpn] = useState();
+	const [onlyVpn, setOnlyVpn] = useState<boolean>();
 	const [step, setStep] = useState(STEPS.VPN_SERVER);
-	const [vpnGroups, setVpnGroups] = useState();
+	const [vpnGroups, setVpnGroups] = useState<SelectInputItem[]>([]);
 	const {setRawMode} = useStdin();
 	const [isRetrievingVpnGroups, setIsRetrievingVpnGroups] = useState(false);
 
@@ -65,7 +77,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 		setRawMode(true);
 	};
 
-	const onServerSet = async inputServer => {
+	const onServerSet = async (inputServer: string) => {
 		setVpnServer(inputServer);
 
 		// Show loader when fetching Cisco groups
@@ -82,27 +94,27 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 		goToNextStep();
 	};
 
-	const handleGroupSet = inputGroup => {
+	const handleGroupSet = (inputGroup: SelectInputItem) => {
 		setGroup(inputGroup);
 		goToNextStep();
 	};
 
-	const onUsernameSet = inputUsername => {
+	const onUsernameSet = (inputUsername: string) => {
 		setUsername(inputUsername);
 		goToNextStep();
 	};
 
-	const onPasswordSet = inputPassword => {
+	const onPasswordSet = (inputPassword: string) => {
 		setPassword(inputPassword);
 		goToNextStep();
 	};
 
-	const onRdpServerSet = inputRdpServer => {
+	const onRdpServerSet = (inputRdpServer: string) => {
 		setRdpServer(inputRdpServer);
 		goToNextStep();
 	};
 
-	const handleOnlyVpnSet = inputOnlyVpn => {
+	const handleOnlyVpnSet = (inputOnlyVpn: SelectInputItem) => {
 		setOnlyVpn(inputOnlyVpn.value === 'yes');
 		goToNextStep();
 	};
@@ -118,7 +130,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 				<>
 					<TextAndInputBox
 						text="VPN server"
-						defaultText={defaultCredentials.vpn.server}
+						defaultText={defaultCredentials?.vpn.server}
 						onSubmit={onServerSet}
 					/>
 					{isRetrievingVpnGroups && (
@@ -136,7 +148,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 						<Text>Group: </Text>
 						<SelectInput
 							items={vpnGroups}
-							initialIndex={Math.min(Number(defaultCredentials.vpn.group), vpnGroups.length - 1)}
+							initialIndex={Math.min(Number(defaultCredentials?.vpn.group), vpnGroups.length - 1)}
 							onSelect={handleGroupSet}
 						/>
 					</Box>
@@ -147,14 +159,14 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 			{step >= STEPS.USERNAME && (
 				<TextAndInputBox
 					text="Username"
-					defaultText={defaultCredentials.vpn.username}
+					defaultText={defaultCredentials?.vpn.username}
 					onSubmit={onUsernameSet}
 				/>
 			)}
 			{step >= STEPS.PASSWORD && (
 				<TextAndInputBox
 					text="Password"
-					defaultText={defaultCredentials.vpn.password || ''}
+					defaultText={defaultCredentials?.vpn.password}
 					onSubmit={onPasswordSet}
 					mask="*"
 				/>
@@ -162,7 +174,7 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 			{step >= STEPS.RDP_SERVER && (
 				<TextAndInputBox
 					text="RDP server"
-					defaultText={defaultCredentials.rdp.server}
+					defaultText={defaultCredentials?.rdp.server}
 					onSubmit={onRdpServerSet}
 				/>
 			)}
@@ -171,13 +183,11 @@ const SetupCredentials = ({onComplete, defaultCredentials}) => {
 					<Text>Only connect to VPN: </Text>
 					<SelectInput
 						items={yesNoOptions}
-						initialIndex={defaultCredentials.onlyVpn === true ? 1 : 0}
+						initialIndex={defaultCredentials?.onlyVpn === true ? 1 : 0}
 						onSelect={handleOnlyVpnSet}
 					/>
 				</Box>
 			)}
 		</>
 	);
-};
-
-export default SetupCredentials;
+}

@@ -5,39 +5,53 @@ import logSymbols from 'log-symbols';
 import {getAllCiscoVpnGroups} from '../index.js';
 import LoadingMessage from './LoadingMessage.js';
 import ErrorMessage from './ErrorMessage.js';
+import {Config, schema} from '../config.js';
 
-const config = new Conf({projectName: 'cisco-vpn-rdp-connecter'});
+const config = new Conf<Config>({projectName: 'cisco-vpn-rdp-connecter', schema});
 
-const TextConfig = ({name, value, isMasked = false}) => {
+type TextConfigProperties = {
+	name: string;
+	value: string;
+	// eslint-disable-next-line react/require-default-props
+	isMasked?: boolean;
+};
+
+function TextConfig({name, value, isMasked = false}: TextConfigProperties) {
 	const textValue = isMasked ? '*'.repeat(value.length) : value;
 
 	return (
 		<Text>{`${name}: ${textValue}`}</Text>
 	);
-};
+}
 
-const ConfigPrinter = ({showPassword = false}) => {
-	const [savedConfig, setSavedConfig] = useState();
-	const [vpnGroupText, setVpnGroupText] = useState();
+export default function ConfigPrinter({showPassword = false}) {
+	const [savedConfig, setSavedConfig] = useState<Config>();
+	const [vpnGroupText, setVpnGroupText] = useState<string>();
 	const [isConfigNotSet, setIsConfigNotSet] = useState(false);
 
 	useEffect(() => {
 		const loadConfig = async () => {
-			const currentConfig = config.get();
+			const vpnConfig = config.get('vpn');
+			const rdpConfig	= config.get('rdp');
+			const onlyVpn = config.get('onlyVpn');
 
 			// Check if config is empty
-			if (Object.entries(currentConfig).length === 0) {
+			if (!vpnConfig || !rdpConfig || onlyVpn === undefined) {
 				setIsConfigNotSet(true);
 				return;
 			}
 
-			setSavedConfig(currentConfig);
+			setSavedConfig({
+				vpn: vpnConfig,
+				rdp: rdpConfig,
+				onlyVpn
+			});
 
-			const ciscoVpnGroups = await getAllCiscoVpnGroups(currentConfig.vpn.server);
+			const ciscoVpnGroups = await getAllCiscoVpnGroups(vpnConfig.server);
 			const currentVpnGroup = ciscoVpnGroups.find(
-				vpnGroup => vpnGroup.number === currentConfig.vpn.group
-			) || {number: currentConfig.vpn.group, name: 'Default'};
-			setVpnGroupText(`${currentVpnGroup.name} (${currentConfig.vpn.group})`);
+				vpnGroup => vpnGroup.number === vpnConfig.group
+			) || {number: vpnConfig.group, name: 'Default'};
+			setVpnGroupText(`${currentVpnGroup.name} (${vpnConfig.group})`);
 		};
 		loadConfig();
 	}, []);
@@ -60,6 +74,4 @@ const ConfigPrinter = ({showPassword = false}) => {
 			<TextConfig name="Only connect to VPN" value={savedConfig.onlyVpn ? logSymbols.success : logSymbols.error} />
 		</>
 	);
-};
-
-export default ConfigPrinter;
+}

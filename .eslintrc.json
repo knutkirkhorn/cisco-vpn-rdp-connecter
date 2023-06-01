@@ -9,8 +9,10 @@
 		"plugin:react/recommended",
 		"airbnb-base",
 		"airbnb",
-		"plugin:unicorn/recommended"
+		"plugin:unicorn/recommended",
+		"plugin:@typescript-eslint/recommended"
 	],
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaFeatures": {
 			"jsx": true
@@ -19,7 +21,7 @@
 	},
 	"plugins": ["react"],
 	"rules": {
-		"indent": ["error", "tab"],
+		"indent": ["error", "tab", {"SwitchCase": 1}],
 		"no-tabs": "off",
 		"quotes": ["error", "single"],
 		"semi": ["error", "always"],
@@ -32,7 +34,7 @@
 		"no-plusplus": "off",
 		"react/jsx-indent": ["error", "tab"],
 		"react/jsx-indent-props": ["error", "tab"],
-		"react/jsx-filename-extension": ["error", { "extensions": [".js"] }],
+		"react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
 		"react/function-component-definition": "off",
 		"react/prop-types": "off",
 		"unicorn/filename-case": "off",

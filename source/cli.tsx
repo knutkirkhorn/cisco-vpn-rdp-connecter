@@ -3,7 +3,7 @@
 import {render} from 'ink';
 import meow from 'meow';
 import React from 'react';
-import ui from './ui.js';
+import App from './app.js';
 import ErrorMessage from './components/ErrorMessage.js';
 
 const cli = meow(`
@@ -25,11 +25,11 @@ const cli = meow(`
 	flags: {
 		setup: {
 			type: 'boolean',
-			alias: 's'
+			shortFlag: 's'
 		},
 		onlyVpn: {
 			type: 'boolean',
-			alias: 'o'
+			shortFlag: 'o'
 		},
 		save: {
 			type: 'boolean'
@@ -49,21 +49,21 @@ const inputHasUnsupportedFlags = enabledCliFlags.some(flag => !supportedFlags.ha
 
 // Show error if input is not valid
 if (cli.input.length > 1 || inputHasUnsupportedFlags) {
-	render(React.createElement(ErrorMessage, {
-		message: 'Invalid input',
-		commandSuggestion: '`cisco-vpn-rdp-connecter --help`',
-		commandSuggestionSuffix: 'to show valid input.'
-	}));
+	render(<ErrorMessage
+		message="Invalid input"
+		commandSuggestion="`cisco-vpn-rdp-connecter --help`"
+		commandSuggestionSuffix="to show valid input."
+	/>);
 
 	process.exit(1);
 }
 
 const [command] = cli.input;
 
-render(React.createElement(ui, {
-	command,
-	setup: cli.flags.setup,
-	onlyVpn: cli.flags.onlyVpn,
-	saveOnlyVpn: cli.flags.save,
-	showPassword: cli.flags.showPassword
-}));
+render(<App
+	command={command}
+	setup={cli.flags.setup}
+	onlyVpn={cli.flags.onlyVpn}
+	saveOnlyVpn={cli.flags.save}
+	showPassword={cli.flags.showPassword}
+/>);
