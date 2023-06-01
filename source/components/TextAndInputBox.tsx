@@ -1,13 +1,21 @@
+/* eslint-disable react/require-default-props */
 import {Box, Text} from 'ink';
 import TextInput from 'ink-text-input';
 import React, {useState} from 'react';
 
-const TextAndInputBox = ({
+type Properties = {
+	text: string;
+	onSubmit: (input: string) => void;
+	mask?: string;
+	defaultText?: string;
+};
+
+export default function TextAndInputBox({
 	text,
 	onSubmit,
 	mask,
-	defaultText
-}) => {
+	defaultText = ''
+}: Properties) {
 	const [inputText, setInputText] = useState('');
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [submittedInput, setSubmittedInput] = useState('');
@@ -51,6 +59,4 @@ const TextAndInputBox = ({
 			)}
 		</Box>
 	);
-};
-
-export default TextAndInputBox;
+}

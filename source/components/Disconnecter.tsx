@@ -8,7 +8,7 @@ const STEPS = {
 	VPN: 1
 };
 
-const Disconnecter = () => {
+export default function Disconnecter() {
 	const [isDisconnectedFromVpn, setIsDisconnectedFromVpn] = useState(false);
 	const [hasClosedRdpWindow, setHasClosedRdpWindow] = useState(false);
 	const [step, setStep] = useState(STEPS.RDP);
@@ -47,6 +47,4 @@ const Disconnecter = () => {
 			)}
 		</>
 	);
-};
-
-export default Disconnecter;
+}
