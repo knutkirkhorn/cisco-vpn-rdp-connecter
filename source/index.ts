@@ -305,7 +305,7 @@ export async function getAllCiscoVpnGroups(server: string): Promise<CiscoVpnGrou
 
 		vpnProcess.stdout.on('data', (data: string) => {
 			if (!data.includes('Group: ')) {
-				return resolve(defaultGroup);
+				return;
 			}
 
 			const untrimmedGroupLines = data.toString().trim()
@@ -326,6 +326,7 @@ export async function getAllCiscoVpnGroups(server: string): Promise<CiscoVpnGrou
 					};
 				})
 				.filter(group => group.number !== undefined && group.name !== undefined) as CiscoVpnGroup[];
+			// eslint-disable-next-line consistent-return
 			return resolve(groups);
 		});
 	});
