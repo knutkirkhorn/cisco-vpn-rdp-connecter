@@ -40,14 +40,13 @@ export default function ConnectionStatuses({onlyVpn}: Properties) {
 
 	useEffect(() => {
 		const checkStatuses = async () => {
-			const vpnConnected = await isCiscoVpnConnected();
-			setIsVpnConnected(vpnConnected);
-
 			const vpnConfig = config.get('vpn');
 			setVpnGroupName(vpnConfig.groupName);
 
-			const rdpOpened = await isRdpWindowOpened();
-			setIsRdpOpened(rdpOpened);
+			const connectionStatusPromises = [isCiscoVpnConnected(), isRdpWindowOpened()];
+			const [vpnConnected, rdpOpened] = await Promise.all(connectionStatusPromises);
+			setIsVpnConnected(vpnConnected as boolean);
+			setIsRdpOpened(rdpOpened as boolean);
 
 			setHasCheckedStatuses(true);
 			exit();
