@@ -18,14 +18,15 @@ const config = new Conf<Config>({projectName: 'cisco-vpn-rdp-connecter', schema}
 
 type ConnectToVpnMessageProperties = {
 	isCompleted: boolean;
+	vpnGroup: string;
 };
 
-function ConnectToVpnMessage({isCompleted}: ConnectToVpnMessageProperties) {
+function ConnectToVpnMessage({isCompleted, vpnGroup}: ConnectToVpnMessageProperties) {
 	return (
 		<LoadingMessage
 			isCompleted={isCompleted}
-			loadingMessage="Connecting to VPN"
-			loadedMessage="Connected to VPN"
+			loadingMessage={`Connecting to VPN (${vpnGroup})`}
+			loadedMessage={`Connected to VPN (${vpnGroup})`}
 		/>
 	);
 }
@@ -56,6 +57,7 @@ export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties
 		vpn: {
 			server: '',
 			group: '',
+			groupName: '',
 			username: '',
 			password: ''
 		},
@@ -261,7 +263,7 @@ export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties
 					defaultCredentials={credentials}
 				/>
 			)}
-			<ConnectToVpnMessage isCompleted={isConnectedToVpn} />
+			<ConnectToVpnMessage isCompleted={isConnectedToVpn} vpnGroup={credentials.vpn.groupName} />
 			{isConnectedToVpn && (
 				connectToOnlyVpn ? (
 					<SuccessMessage message="Skipping Remote Desktop" />

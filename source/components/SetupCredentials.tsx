@@ -56,6 +56,7 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 			vpn: {
 				server: vpnServer,
 				group: group.value,
+				groupName: group.label,
 				username,
 				password
 			},

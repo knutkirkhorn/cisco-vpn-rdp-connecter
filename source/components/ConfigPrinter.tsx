@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import Conf from 'conf';
 import {Text} from 'ink';
 import logSymbols from 'log-symbols';
-import {getAllCiscoVpnGroups} from '../index.js';
 import LoadingMessage from './LoadingMessage.js';
 import ErrorMessage from './ErrorMessage.js';
 import {Config, schema} from '../config.js';
@@ -47,11 +46,8 @@ export default function ConfigPrinter({showPassword = false}) {
 				onlyVpn
 			});
 
-			const ciscoVpnGroups = await getAllCiscoVpnGroups(vpnConfig.server);
-			const currentVpnGroup = ciscoVpnGroups.find(
-				vpnGroup => vpnGroup.number === vpnConfig.group
-			) || {number: vpnConfig.group, name: 'Default'};
-			setVpnGroupText(`${currentVpnGroup.name} (${vpnConfig.group})`);
+			const vpnGroupName = vpnConfig.groupName || 'Default';
+			setVpnGroupText(`${vpnGroupName} (${vpnConfig.group})`);
 		};
 		loadConfig();
 	}, []);

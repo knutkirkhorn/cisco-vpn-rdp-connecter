@@ -2,6 +2,7 @@ export type Config = {
 	vpn: {
 		server: string;
 		group: string;
+		groupName: string;
 		username: string;
 		password: string;
 	};
@@ -19,6 +20,9 @@ export const schema = {
 				type: 'string'
 			},
 			group: {
+				type: 'string'
+			},
+			groupName: {
 				type: 'string'
 			},
 			username: {
