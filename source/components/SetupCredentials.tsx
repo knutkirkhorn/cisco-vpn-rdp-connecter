@@ -13,17 +13,17 @@ const STEPS = {
 	USERNAME: 2,
 	PASSWORD: 3,
 	RDP_SERVER: 4,
-	ONLY_VPN: 5
+	ONLY_VPN: 5,
 };
 const yesNoOptions = [
 	{
 		label: 'No',
-		value: 'no'
+		value: 'no',
 	},
 	{
 		label: 'Yes',
-		value: 'yes'
-	}
+		value: 'yes',
+	},
 ];
 
 type Properties = {
@@ -58,12 +58,12 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 				group: group.value,
 				groupName: group.label,
 				username,
-				password
+				password,
 			},
 			rdp: {
-				server: rdpServer
+				server: rdpServer,
 			},
-			onlyVpn
+			onlyVpn,
 		});
 	}, [onlyVpn]);
 
@@ -87,7 +87,7 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 		const fetchedCiscoGroups = await getAllCiscoVpnGroups(inputServer);
 		const ciscoGroups = fetchedCiscoGroups.map(vpnGroup => ({
 			value: vpnGroup.number,
-			label: vpnGroup.name
+			label: vpnGroup.name,
 		}));
 		setVpnGroups(ciscoGroups);
 		setIsRetrievingVpnGroups(false);

@@ -17,31 +17,31 @@ export const schema = {
 		type: 'object',
 		properties: {
 			server: {
-				type: 'string'
+				type: 'string',
 			},
 			group: {
-				type: 'string'
+				type: 'string',
 			},
 			groupName: {
-				type: 'string'
+				type: 'string',
 			},
 			username: {
-				type: 'string'
+				type: 'string',
 			},
 			password: {
-				type: 'string'
-			}
-		}
+				type: 'string',
+			},
+		},
 	},
 	rdp: {
 		type: 'object',
 		properties: {
 			server: {
-				type: 'string'
-			}
-		}
+				type: 'string',
+			},
+		},
 	},
 	onlyVpn: {
-		type: 'boolean'
-	}
+		type: 'boolean',
+	},
 };

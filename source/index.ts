@@ -11,7 +11,7 @@ import sqlite3 from 'sqlite3';
 
 const ciscoVpnCliPaths = {
 	win32: 'C:/Program Files (x86)/Cisco/Cisco AnyConnect Secure Mobility Client/vpncli.exe',
-	darwin: '/opt/cisco/anyconnect/bin/vpn'
+	darwin: '/opt/cisco/anyconnect/bin/vpn',
 };
 
 /**
@@ -54,7 +54,7 @@ export async function connectToVpn(server: string, group: string, username: stri
 		server,
 		username: combinedVpnGroupAndUsername,
 		password,
-		exe: ciscoVpnCliPath
+		exe: ciscoVpnCliPath,
 	});
 
 	try {
@@ -112,12 +112,12 @@ export async function openRdpWindow(server: string) {
 	const rdpCommands = {
 		win32: {
 			command: 'cmd.exe',
-			args: ['/c', 'start', 'mstsc.exe', `/v:${server}`]
+			args: ['/c', 'start', 'mstsc.exe', `/v:${server}`],
 		},
 		darwin: {
 			command: 'open',
-			args: ['/Applications/Microsoft Remote Desktop.app']
-		}
+			args: ['/Applications/Microsoft Remote Desktop.app'],
+		},
 	};
 
 	if (!(process.platform in rdpCommands)) {
@@ -298,8 +298,8 @@ export async function getAllCiscoVpnGroups(server: string): Promise<CiscoVpnGrou
 		const defaultGroup: CiscoVpnGroup[] = [
 			{
 				number: '0',
-				name: 'Default'
-			}
+				name: 'Default',
+			},
 		];
 		vpnProcess.on('close', () => resolve(defaultGroup));
 
@@ -322,7 +322,7 @@ export async function getAllCiscoVpnGroups(server: string): Promise<CiscoVpnGrou
 					const [number, name] = groupLineData;
 					return {
 						number,
-						name
+						name,
 					};
 				})
 				.filter(group => group.number !== undefined && group.name !== undefined) as CiscoVpnGroup[];
@@ -433,7 +433,7 @@ export async function getRdpDefaults(): Promise<RdpDefaults> {
 	if (process.platform === 'darwin') {
 		const rdpSqliteDatabasePath = path.join(
 			homedir(),
-			'/Library/Containers/com.microsoft.rdc.macos/Data/Library/Application Support/com.microsoft.rdc.macos/com.microsoft.rdc.application-data.sqlite'
+			'/Library/Containers/com.microsoft.rdc.macos/Data/Library/Application Support/com.microsoft.rdc.macos/com.microsoft.rdc.application-data.sqlite',
 		);
 		const database = new sqlite3.Database(rdpSqliteDatabasePath);
 		const server = await new Promise((resolve, reject) => {
@@ -481,7 +481,7 @@ export async function disconnectFromVpn() {
 			server: 'noop',
 			username: 'noop',
 			password: 'noop',
-			exe: ciscoVpnCliPath
+			exe: ciscoVpnCliPath,
 		}).disconnect();
 	} catch (error) {
 		if (error instanceof Error) {
@@ -522,12 +522,12 @@ export async function closeRdpWindow() {
 	const rdpCloseCommands = {
 		win32: {
 			command: 'taskkill',
-			args: ['/im', 'mstsc.exe']
+			args: ['/im', 'mstsc.exe'],
 		},
 		darwin: {
 			command: 'pkill',
-			args: ['Microsoft Remote Desktop']
-		}
+			args: ['Microsoft Remote Desktop'],
+		},
 	};
 
 	if (!(process.platform in rdpCloseCommands)) {

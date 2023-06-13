@@ -28,7 +28,6 @@
 		"linebreak-style": "off",
 		"arrow-parens": ["error", "as-needed"],
 		"object-curly-spacing": ["error", "never"],
-		"comma-dangle": ["error", "never"],
 		"import/extensions": ["error", "always"],
 		"max-len": "off",
 		"no-plusplus": "off",

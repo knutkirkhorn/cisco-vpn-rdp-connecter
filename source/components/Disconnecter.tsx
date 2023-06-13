@@ -5,7 +5,7 @@ import LoadingMessage from './LoadingMessage.js';
 
 const STEPS = {
 	RDP: 0,
-	VPN: 1
+	VPN: 1,
 };
 
 export default function Disconnecter() {

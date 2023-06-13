@@ -6,7 +6,7 @@ import {
 	openRdpWindow,
 	isCiscoVpnConnected,
 	getCiscoVpnDefaults,
-	getRdpDefaults
+	getRdpDefaults,
 } from '../index.js';
 import LoadingMessage from './LoadingMessage.js';
 import SetupCredentials from './SetupCredentials.js';
@@ -59,12 +59,12 @@ export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties
 			group: '',
 			groupName: '',
 			username: '',
-			password: ''
+			password: '',
 		},
 		rdp: {
-			server: ''
+			server: '',
 		},
-		onlyVpn: false
+		onlyVpn: false,
 	});
 	const [isCheckingSavedCredentials, setIsCheckingSavedCredentials] = useState(true);
 	const [isSettingUpCredentials, setIsSettingUpCredentials] = useState(true);
@@ -86,10 +86,10 @@ export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties
 				const ciscoVpnDefaults = isVpnConnected ? {
 					server: '',
 					group: '',
-					username: ''
+					username: '',
 				} : await getCiscoVpnDefaults();
 				const rdpDefaults = connectToOnlyVpn ? {
-					server: ''
+					server: '',
 				} : await getRdpDefaults();
 
 				setCredentials({
@@ -97,13 +97,13 @@ export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties
 						...vpnCredentials,
 						server: ciscoVpnDefaults.server,
 						group: ciscoVpnDefaults.group,
-						username: ciscoVpnDefaults.username
+						username: ciscoVpnDefaults.username,
 					},
 					rdp: {
 						...rdpCredentials,
-						server: rdpDefaults.server
+						server: rdpDefaults.server,
 					},
-					onlyVpn: savedOnlyVpn
+					onlyVpn: savedOnlyVpn,
 				});
 
 				setIsCheckingSavedCredentials(false);
@@ -153,7 +153,7 @@ export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties
 				server,
 				group,
 				username,
-				password
+				password,
 			} = credentials.vpn;
 
 			const isVpnAlreadyConnected = await isCiscoVpnConnected();

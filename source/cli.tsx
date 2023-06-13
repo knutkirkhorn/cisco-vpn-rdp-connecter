@@ -25,20 +25,20 @@ const cli = meow(`
 	flags: {
 		setup: {
 			type: 'boolean',
-			shortFlag: 's'
+			shortFlag: 's',
 		},
 		onlyVpn: {
 			type: 'boolean',
-			shortFlag: 'o'
+			shortFlag: 'o',
 		},
 		save: {
-			type: 'boolean'
+			type: 'boolean',
 		},
 		showPassword: {
-			type: 'boolean'
-		}
+			type: 'boolean',
+		},
 	},
-	importMeta: import.meta
+	importMeta: import.meta,
 });
 
 const enabledCliFlags = Object.entries(cli.flags)

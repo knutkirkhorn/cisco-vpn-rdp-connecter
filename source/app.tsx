@@ -25,7 +25,7 @@ export default function App({
 	setup: requestedSetup = false,
 	onlyVpn = false,
 	saveOnlyVpn = false,
-	showPassword = false
+	showPassword = false,
 }: AppProperties) {
 	const [hasCheckedVpnInstallation, setHasCheckedVpnInstallation] = useState(false);
 	const [foundCiscoAnyConnectInstallation, setFoundCiscoAnyConnectInstallation] = useState<boolean>();

@@ -14,7 +14,7 @@ export default function TextAndInputBox({
 	text,
 	onSubmit,
 	mask,
-	defaultText = ''
+	defaultText = '',
 }: Properties) {
 	const [inputText, setInputText] = useState('');
 	const [isCompleted, setIsCompleted] = useState(false);

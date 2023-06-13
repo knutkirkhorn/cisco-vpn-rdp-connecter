@@ -13,7 +13,7 @@ import {
 	isCiscoVpnConnected,
 	isRdpWindowOpened,
 	openRdpWindow,
-	RdpDefaults
+	RdpDefaults,
 } from '../source/index.js';
 
 expectType<Promise<void>>(connectToVpn('example-server', '1', 'knut', 'supersecret'));
@@ -22,7 +22,7 @@ expectType<Promise<void>>(connectToVpnAndOpenRdp({
 	server: 'example-server',
 	group: '1',
 	username: 'knut',
-	password: 'supersecret'
+	password: 'supersecret',
 }, 'example-server'));
 expectType<Promise<boolean>>(isCiscoAnyConnectInstalled());
 expectType<Promise<boolean>>(isCiscoVpnConnected());

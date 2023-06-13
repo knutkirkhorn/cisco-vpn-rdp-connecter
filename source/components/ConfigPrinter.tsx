@@ -43,7 +43,7 @@ export default function ConfigPrinter({showPassword = false}) {
 			setSavedConfig({
 				vpn: vpnConfig,
 				rdp: rdpConfig,
-				onlyVpn
+				onlyVpn,
 			});
 
 			const vpnGroupName = vpnConfig.groupName || 'Default';

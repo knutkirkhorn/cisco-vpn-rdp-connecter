@@ -17,7 +17,7 @@ type StatusMessageProperties = {
 };
 
 function StatusMessage({
-	okStatus, type, message, extra
+	okStatus, type, message, extra,
 }: StatusMessageProperties) {
 	return (
 		<Text>
