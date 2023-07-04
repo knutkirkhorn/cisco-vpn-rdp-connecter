@@ -22,11 +22,15 @@ type ConnectToVpnMessageProperties = {
 };
 
 function ConnectToVpnMessage({isCompleted, vpnGroup}: ConnectToVpnMessageProperties) {
+	const vpnGroupText = vpnGroup
+		? `(${vpnGroup})`
+		: '';
+
 	return (
 		<LoadingMessage
 			isCompleted={isCompleted}
-			loadingMessage={`Connecting to VPN (${vpnGroup})`}
-			loadedMessage={`Connected to VPN (${vpnGroup})`}
+			loadingMessage={`Connecting to VPN ${vpnGroupText}`}
+			loadedMessage={`Connected to VPN ${vpnGroupText}`}
 		/>
 	);
 }
