@@ -1,13 +1,14 @@
 /* eslint-disable react/require-default-props */
 import {Box, Text} from 'ink';
 import TextInput from 'ink-text-input';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 type Properties = {
 	text: string;
 	onSubmit: (input: string) => void;
 	mask?: string;
 	defaultText?: string;
+	newCompletionState?: boolean;
 };
 
 export default function TextAndInputBox({
@@ -15,12 +16,19 @@ export default function TextAndInputBox({
 	onSubmit,
 	mask,
 	defaultText = '',
+	newCompletionState,
 }: Properties) {
 	const [inputText, setInputText] = useState('');
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [submittedInput, setSubmittedInput] = useState('');
 
 	const startInputText = `${text}:`;
+
+	useEffect(() => {
+		if (!newCompletionState) {
+			setIsCompleted(false);
+		}
+	}, [newCompletionState]);
 
 	const onCompleteInput = () => {
 		// Don't continue if there is no input

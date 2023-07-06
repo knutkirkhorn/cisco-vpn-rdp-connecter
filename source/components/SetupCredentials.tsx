@@ -1,4 +1,9 @@
-import {Text, Box, useStdin} from 'ink';
+import {
+	Text,
+	Box,
+	useStdin,
+	useInput,
+} from 'ink';
 import React, {useState, useEffect} from 'react';
 import SelectInput from 'ink-select-input';
 import {getAllCiscoVpnGroups} from '../index.js';
@@ -78,6 +83,16 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 		setRawMode(true);
 	};
 
+	const goToPreviousStep = () => {
+		setStep(step - 1);
+	};
+
+	useInput((_input, key) => {
+		if (key.backspace && step >= STEPS.GROUP) {
+			goToPreviousStep();
+		}
+	});
+
 	const onServerSet = async (inputServer: string) => {
 		setVpnServer(inputServer);
 
@@ -133,6 +148,7 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 						text="VPN server"
 						defaultText={defaultCredentials?.vpn.server}
 						onSubmit={onServerSet}
+						newCompletionState={step >= STEPS.GROUP}
 					/>
 					{isRetrievingVpnGroups && (
 						<LoadingMessage
@@ -162,6 +178,7 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 					text="Username"
 					defaultText={defaultCredentials?.vpn.username}
 					onSubmit={onUsernameSet}
+					newCompletionState={step >= STEPS.PASSWORD}
 				/>
 			)}
 			{step >= STEPS.PASSWORD && (
@@ -170,6 +187,7 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 					defaultText={defaultCredentials?.vpn.password}
 					onSubmit={onPasswordSet}
 					mask="*"
+					newCompletionState={step >= STEPS.RDP_SERVER}
 				/>
 			)}
 			{step >= STEPS.RDP_SERVER && (
@@ -177,6 +195,7 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 					text="RDP server"
 					defaultText={defaultCredentials?.rdp.server}
 					onSubmit={onRdpServerSet}
+					newCompletionState={step >= STEPS.ONLY_VPN}
 				/>
 			)}
 			{step >= STEPS.ONLY_VPN && (
