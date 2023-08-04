@@ -17,8 +17,8 @@ const STEPS = {
 	GROUP: 1,
 	USERNAME: 2,
 	PASSWORD: 3,
-	RDP_SERVER: 4,
-	ONLY_VPN: 5,
+	ONLY_VPN: 4,
+	RDP_SERVER: 5,
 };
 const yesNoOptions = [
 	{
@@ -47,15 +47,15 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 	const [group, setGroup] = useState<SelectInputItem>({label: '', value: ''});
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const [rdpServer, setRdpServer] = useState('');
-	const [onlyVpn, setOnlyVpn] = useState<boolean>();
+	const [rdpServer, setRdpServer] = useState(defaultCredentials?.rdp.server || '');
+	const [onlyVpn, setOnlyVpn] = useState<boolean>(false);
 	const [step, setStep] = useState(STEPS.VPN_SERVER);
 	const [vpnGroups, setVpnGroups] = useState<SelectInputItem[]>([]);
 	const {setRawMode} = useStdin();
 	const [isRetrievingVpnGroups, setIsRetrievingVpnGroups] = useState(false);
 
 	useEffect(() => {
-		if (onlyVpn === undefined) return;
+		if (step <= STEPS.RDP_SERVER) return;
 
 		onComplete({
 			vpn: {
@@ -70,7 +70,7 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 			},
 			onlyVpn,
 		});
-	}, [onlyVpn]);
+	}, [step]);
 
 	const goToNextStep = () => {
 		setStep(step + 1);
@@ -125,18 +125,25 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 		goToNextStep();
 	};
 
+	const handleOnlyVpnSet = (inputOnlyVpn: SelectInputItem) => {
+		setOnlyVpn(inputOnlyVpn.value === 'yes');
+
+		// If user only wants VPN, skip RDP server step
+		if (inputOnlyVpn.value === 'yes') {
+			setStep(step + 2);
+			return;
+		}
+
+		goToNextStep();
+	};
+
 	const onRdpServerSet = (inputRdpServer: string) => {
 		setRdpServer(inputRdpServer);
 		goToNextStep();
 	};
 
-	const handleOnlyVpnSet = (inputOnlyVpn: SelectInputItem) => {
-		setOnlyVpn(inputOnlyVpn.value === 'yes');
-		goToNextStep();
-	};
-
 	// If all steps are completed show "completed" message
-	if (step > STEPS.ONLY_VPN) {
+	if (step > STEPS.RDP_SERVER) {
 		return <SuccessMessage message="Setup completed" />;
 	}
 
@@ -190,14 +197,6 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 					newCompletionState={step >= STEPS.RDP_SERVER}
 				/>
 			)}
-			{step >= STEPS.RDP_SERVER && (
-				<TextAndInputBox
-					text="RDP server"
-					defaultText={defaultCredentials?.rdp.server}
-					onSubmit={onRdpServerSet}
-					newCompletionState={step >= STEPS.ONLY_VPN}
-				/>
-			)}
 			{step >= STEPS.ONLY_VPN && (
 				<Box>
 					<Text>Only connect to VPN: </Text>
@@ -207,6 +206,14 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 						onSelect={handleOnlyVpnSet}
 					/>
 				</Box>
+			)}
+			{step >= STEPS.RDP_SERVER && (
+				<TextAndInputBox
+					text="RDP server"
+					defaultText={defaultCredentials?.rdp.server}
+					onSubmit={onRdpServerSet}
+					newCompletionState={step >= STEPS.ONLY_VPN}
+				/>
 			)}
 		</>
 	);

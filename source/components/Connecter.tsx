@@ -93,7 +93,7 @@ export default function Connecter({requestedSetup, onlyVpn}: ConnecterProperties
 					username: '',
 				} : await getCiscoVpnDefaults();
 				const rdpDefaults = connectToOnlyVpn ? {
-					server: '',
+					server: rdpCredentials.server,
 				} : await getRdpDefaults();
 
 				setCredentials({
