@@ -42,6 +42,8 @@ type SelectInputItem = {
 	value: string;
 };
 
+const isMacOs = process.platform === 'darwin';
+
 export default function SetupCredentials({onComplete, defaultCredentials}: Properties) {
 	const [vpnServer, setVpnServer] = useState('');
 	const [group, setGroup] = useState<SelectInputItem>({label: '', value: ''});
@@ -88,7 +90,10 @@ export default function SetupCredentials({onComplete, defaultCredentials}: Prope
 	};
 
 	useInput((_input, key) => {
-		if (key.backspace && step >= STEPS.GROUP) {
+		const hasPressedBackspace = key.backspace || (isMacOs && key.delete);
+		const canGoBack = step > STEPS.VPN_SERVER;
+
+		if (hasPressedBackspace && canGoBack) {
 			goToPreviousStep();
 		}
 	});
